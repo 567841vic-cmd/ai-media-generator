@@ -2,6 +2,49 @@
 
 All notable changes to this skill are documented here.
 
+## [1.3.0] - 2026-05-19 — Cross-platform open-source prompt intake (8 repos researched)
+
+Major content expansion. Researched 8 high-star open-source prompt repos on GitHub and integrated key patterns into the skill.
+
+### Repos researched
+
+| Repo | Stars | License | Focus |
+|---|---|---|---|
+| YouMind-OpenLab/awesome-seedance-2-prompts | high | CC BY 4.0 | Seedance 2.0 (already in v1.1.0) |
+| **liu-kaining/Awesome-Veo3-Prompts** | 68⭐ | MIT | **Veo 3.1 JSON-structured prompts (NEW)** |
+| **xjpp22/awesome--sora-prompts** | 102⭐ | open | **31 directors visual+editing styles (NEW)** |
+| geekjourneyx/awesome-ai-video-prompts | 53⭐ | MIT | Cross-platform (mostly stubs) |
+| Pixmind-io/awesome-midjourney-v7-example-prompts | new | CC0 | MJ V7 verified params |
+| Banana-Prompts/awesome-nano-banana-prompts | 51⭐ | open | Nano Banana style anchors |
+| GarvitOfficial/nanoBananaPrompts | 45⭐ | open | Nano Banana seed+result triples |
+| naqashmunir21/awesome-suno-prompts | 37⭐ | CC0 | **Suno 1000+ with BPM+Key (NEW)** |
+
+### New files
+
+- **`references/director-style-library.md`** — 31 world-class directors (Wong Kar-wai / Villeneuve / Nolan / Miyazaki / Wes Anderson / Tarkovsky / del Toro / Park Chan-wook / Bong Joon-ho / Kore-eda / etc.) with Visual + Editing Style Prompts in English + Chinese index + 用法範例 + 類型對應速查表
+- **`references/external-resources.md`** — Catalog of 8 upstream repos + monthly pull SOP + future-discovery checklist
+
+### Updated files
+
+- **`references/community-prompt-patterns.md`**:
+  - **Veo 3.1**: Added **JSON-structured prompt format** (8 keys structure: shot_name / camera / setting / subject / visual_style / composition / implied_elements / sound). Veo3 actively parses structured JSON.
+  - **Sora 2**: Added director-style support (links to director-style-library.md)
+  - **Midjourney v7**: Added V7 sweet-spot params per use case (`--ar 4:5 --s 250-350 --v 7` for portraits; `--ar 16:9 --s 300-400 --style raw --v 7` for cinematic; etc.) + ad-grade anchor token list
+  - **Nano Banana Pro**: Added short-form example evidence + style anchor library
+  - **Suno v5 (NEW section)**: BPM + Key standard format (`BPM: 128, Key: C Major`), per-genre token vocabularies (Pop / EDM / Hip-Hop / Rock / Country / R&B / Indie / Jazz), use-case + energy tag conventions
+
+### Key cross-platform insight
+
+**JSON-structured prompts are now first-class for Veo 3.1** — earlier guidance favored free-text. New evidence: Veo3 actively parses 8-key JSON with film_stock, lighting_direction, atmosphere etc. as nested keys.
+
+### Files changed
+
+- `references/director-style-library.md` — +273 lines (NEW)
+- `references/external-resources.md` — +131 lines (NEW)
+- `references/community-prompt-patterns.md` — +100 lines (Veo JSON + Suno + MJ V7 params + Nano short-form)
+
+---
+
 ## [1.2.3] - 2026-05-19 — Two-session validated 自由畫布 SOP refinements
 
 After two consecutive successful ad generations (interior design + Michelin cuisine) through the §12.10 自由畫布 6-batch SOP, added 7 new field-tested techniques as §12.10.2:

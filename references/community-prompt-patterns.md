@@ -82,17 +82,36 @@
   - 冒號對白：`Detective: "You're lying."`
   - 光線方向明確：`warm key from left, cool rim from neon`
   - 語氣詞：`professional`, `deadpan`, `dramatic`
+  - **🆕 導演 style 強支援**（31 位範本見 [director-style-library.md](director-style-library.md)）：
+    - `in the style of Wong Kar-wai` — neon + slow-motion + tracking
+    - `in the style of Denis Villeneuve` — epic landscape + atmospheric
+    - `in the style of Wes Anderson` — symmetric + pastel
+    - `in the style of Christopher Nolan` — IMAX + practical effects
 - **Trick：** 2×4s stitched > 1×8s（官方 cookbook 推薦）
 - **禁忌：** 會話語氣 ("please make")、模糊形容詞、over-direct physics
 
 ### Veo 3.1（Google Flow）
 - **結構：** [Cinematography] + [Subject] + [Action] + [Context] + [Style & Ambiance]
-- **長度：** 1-2 句 simple / 4-8 複雜 / timecode blocks 150+ 字
+- **🆕 結構 v2（2026-05-19 發現）：JSON-structured prompt** — Veo3 直接解析結構化 JSON，比自由文本更精準。8 個 key：
+  ```json
+  {
+    "shot_name": "Aerial Shot - Car on Dirt Road",
+    "camera": {"type": "Wide Shot", "movement": "...", "lens": "Panavision", "focus": "...", "lighting_direction": "..."},
+    "setting": {"environment": "...", "time_of_day": "Night", "atmosphere": "..."},
+    "subject": {"main_subject": "...", "details": "..."},
+    "visual_style": {"genre": "...", "film_stock": "Kodak 35mm Eastman 100T 5247", "color_grade": "...", "rating_tone": "PG-13", "overall_feel": "..."},
+    "composition": {"elements": "..."},
+    "implied_elements": {"sound": "..."}
+  }
+  ```
+  Source: [`liu-kaining/Awesome-Veo3-Prompts`](https://github.com/liu-kaining/Awesome-Veo3-Prompts) 68⭐ — 31 個 JSON-formatted 範本，雙語版（EN+中文 JSON）。
+- **長度：** 1-2 句 simple / 4-8 複雜 / timecode blocks 150+ 字 / **JSON 200-400 字最穩**
 - **簽名 token（唯一 load-bearing audio）：**
   - `SFX: rustle of leaves, distant bird calls`
   - `Ambient: swelling orchestral score`
   - 對白用 `"quoted"`
   - Timecode：`[00:00-00:02] Medium shot from behind ...`
+  - **JSON 模式**：`film_stock` 可填 `Kodak 35mm Eastman 100T 5247` / `Fuji Eterna` / `Cinestill 800T`
 - **禁忌：** 負面 `no buildings` → 反寫 `desolate landscape`；under-specified camera；5+ SFX lines
 
 ### Runway Gen-4 / Aleph
@@ -123,6 +142,17 @@
 ### Midjourney v7
 - **結構：** `[subject], [5-8 details], [lighting], [camera/lens], --ar X:Y --stylize N --style raw --sref/--oref`
 - **長度：** 30-60 comma chips
+- **🆕 V7 sweet spot params（2026-05-19 確認 from [`Pixmind-io/awesome-midjourney-v7-example-prompts`](https://github.com/Pixmind-io/awesome-midjourney-v7-example-prompts)）：**
+  - **Portrait/Editorial：** `--ar 4:5 --s 250-350 --v 7`
+  - **Cinematic/Documentary：** `--ar 16:9 --s 300-400 --style raw --v 7`
+  - **Anime/Concept Art：** `--ar 9:16 --s 400-750 --v 7`
+  - **Architecture：** `--ar 3:2 --s 200-300 --v 7`
+  - **3D/Isometric：** `--ar 1:1 --s 250 --v 7`
+- **🆕 廣告級 anchor token（V7 證據版）：**
+  - `Editorial fashion portrait` / `Cinematic portrait` / `Documentary photography style`
+  - `Hasselblad medium format` / `shot on 35mm film` / `Leica`
+  - `Natural window light from left` / `Soft diffused lighting`
+  - `Desaturated color palette` / `Warm morning atmosphere`
 - **Params：**
   - `--ar` 3:4/9:16/16:9
   - `--stylize 60-150` 寫實 portrait / 400-750 fantasy
@@ -167,12 +197,62 @@ cowboy shot, realistic, male warrior, ancient chinese, beard, long black hair, h
 Corporate headshot of a middle-aged Asian businessman, navy suit, neutral gray background, soft box lighting from 45-degree angle, sharp focus on eyes.
 ```
 
+### 🆕 Nano Banana Pro（2026-05-19 補充 from [`Banana-Prompts/awesome-nano-banana-prompts`](https://github.com/Banana-Prompts/awesome-nano-banana-prompts) 51⭐）
+- **核心發現：** Nano Banana 短句也能 work（單 sentence + style anchor）
+- **短式範例：**
+  ```
+  3D floor plan: 2-bedroom apartment. Top-down view. Realistic furniture.
+  ```
+  ```
+  Library design. Floor-to-ceiling shelves, rolling ladders. Dark wood. "Dark Academia."
+  ```
+  ```
+  Tiny House interior. Efficient layout, loft bed, wood finish. Wide angle.
+  ```
+- **長式範例（複雜場景）：** 80-150 字自然段落仍 work
+- **Style anchor 列表：** `Dark Academia`, `Modern Luxury`, `Brutalist`, `Bauhaus`, `Mid-Century Modern`, `Japandi`, `Coastal`, `Minimalist`, `Maximalist`
+- **`"quoted text"` 字面渲染** — 確認仍是 Nano Banana superpower
+
+---
+
+## 🎵 音樂模型 per-model 簽名
+
+### Suno v5（2026-05-19 大更新 — 1000+ prompts 證據）
+
+> **Source：** [`naqashmunir21/awesome-suno-prompts`](https://github.com/naqashmunir21/awesome-suno-prompts) 37⭐ (CC0)，1000+ genre-organized prompts
+
+- **結構：** 4-line body — `主風格 vocals/style` + `製作元素 production tags` + `情緒 energy` + `BPM + Key`
+- **長度：** 30-80 字 / 4 行
+- **🆕 BPM + Key 必標**（這是 v5 sweet spot）：
+  - `BPM: 128, Key: C Major` — Pop / Dance
+  - `BPM: 90, Key: A Minor` — Hip-Hop / Trap
+  - `BPM: 140, Key: F# Minor` — EDM Festival
+  - `BPM: 75, Key: D Major` — Ballad / R&B
+  - `BPM: 170, Key: E Minor` — Drum & Bass / Hardcore
+- **簽名 token by genre：**
+  - **Pop：** `infectious pop anthem`, `female powerhouse vocals`, `layered harmonies`, `radio-ready polish`, `stadium-ready energy`
+  - **EDM：** `massive drop-ready`, `EDM-influenced production`, `soaring vocal hooks`, `festival main stage energy`, `sub-bass that punches`
+  - **Hip-Hop：** `boom-bap drums`, `crispy hi-hats`, `vinyl-sampled bass`, `confident delivery`, `street narrative`
+  - **Rock：** `crunchy guitars`, `power chord riffs`, `pounding drums`, `arena-ready production`
+  - **Country：** `acoustic guitar lead`, `slide guitar`, `storytelling vocal`, `pickup truck imagery`
+  - **R&B / Soul：** `silky smooth vocal`, `Rhodes piano`, `808 bass`, `sensual mood`, `late-night vibe`
+  - **Indie / Alt：** `lo-fi production`, `dreamy reverb`, `whisper vocal`, `bedroom pop`
+  - **Jazz / Blues：** `walking bass line`, `swing rhythm`, `brass section`, `improvised solo`
+- **Use Case + Energy tag 約定**：
+  ```
+  **Use Case:** TikTok viral hits, summer anthems
+  **Energy:** 9/10
+  **Notable Feature:** Perfect for social media campaigns
+  ```
+  雖然不會送進 Suno，但**標註幫助你日後 reuse**。
+- **禁忌：** 同一行寫 >3 種衝突 genre（"jazz + EDM + country"）、模糊形容詞（"good music"）、無 BPM 反而易隨機
+
 ---
 
 ## 🎯 跨模型 workflow 組合（實戰）
 
 ### 寫實戰鬥短片（當前 use case）
-1. **Nano Pro / Midjourney v7 + your character ref** → 生 key frame 圖（含武打氛圍）
+1. **Nano Pro / Midjourney v7 + Aria ref** → 生 key frame 圖（含武打氛圍）
 2. **Kling 3.0 / Sora 2 / Veo 3.1** 用該圖做 i2v
    - Kling：40-80 字、handheld + whip pans
    - Sora 2：format anchor (`bodycam footage of ancient battle`)
