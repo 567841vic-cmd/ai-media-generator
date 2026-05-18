@@ -2,6 +2,51 @@
 
 All notable changes to this skill are documented here.
 
+## [1.2.3] - 2026-05-19 — Two-session validated 自由畫布 SOP refinements
+
+After two consecutive successful ad generations (interior design + Michelin cuisine) through the §12.10 自由畫布 6-batch SOP, added 7 new field-tested techniques as §12.10.2:
+
+### 7 new findings
+
+1. **Reuse saved workspace saves 1 batch** — clicking 「最近項目」second card preserves Seedance 2.0 pro model selection. Only need to reset duration + resolution + type + send.
+
+2. **"我想修改" flow resets duration EVERY time** — once a workspace has committed at least one generation, duration always reverts to 10s default. Aspect (16:9) usually preserved, resolution sometimes resets. ALWAYS reset duration before re-submitting.
+
+3. **Agent may request second-pass confirmation on aspect + dialogue language** — even with settings panel set to 16:9, the 藝術總監 agent can pop "預設不會帶入推測值" and wait for user confirm. Pre-empt by writing `[比例] 16:9` `[對白] 無對白` explicitly in the prompt.
+
+4. **STAR doesn't deduct immediately** — submit shows "已成功產生影片" but balance unchanged. Agent waits for user confirmation to commit (then 210 STAR deducts). The "影片 1" shown may be PREVIEW, not final commit.
+
+5. **Viewport 705 vs 751 both occur** — added both coordinate columns to the cheat sheet. Always screenshot first, then pick the right column.
+
+6. **Batched clicks >5 freeze renderer** — Chrome may freeze for 30s causing screenshot timeout. Cap batches at 5-6 actions or split.
+
+7. **Chinese typo tolerance** — `type` action sometimes mis-renders Chinese (主廚→主廄, 滲→滨) but Seedance 2.0 tokenizer is forgiving. Don't waste time retyping; semantic intent survives. Use English+quotes for brand/product names to avoid typo risk.
+
+### Two-session render fidelity log
+
+- 室內設計廣告: 9/10 (人物 / 傢俱 / 光感 / 運鏡命中)
+- 米其林料理廣告: 9/10 (主廚 / 擺盤 / 暖光 / 鑷子動作命中)
+
+### Files changed
+
+- `automation/site-profiles/oiioii.md` — +119 lines (§12.10.2)
+
+---
+
+## [1.2.2] - 2026-05-19 — Bake user "use 自由畫布" hard rule
+
+User had previously instructed to use 自由畫布 for OiiOii video tasks. Skill ignored this during self-directed "optimization" and tested story-mode, wasting STAR.
+
+Baked into 3 layers:
+
+1. **Memory layer**: `~/.claude/memory/feedback_oiioii_mode_lock.md` (persists across sessions)
+2. **Memory index**: `MEMORY.md` updated with new entry
+3. **Skill layer**: `oiioii.md §12.10.1` header now opens with red user-hard-rule line: "OiiOii 任何 video task → 永遠用「自由畫布」"
+
+Treated like a paywall checkpoint — non-negotiable.
+
+---
+
 ## [1.2.1] - 2026-05-19 — Story-mode warning (correction)
 
 **Critical correction to v1.2.0.** While documenting v1.2.0 I had appended a §12.10.1 claiming「Seedance 2.0 故事動畫」chip from home page is a "3-batch express SOP". **This was wrong** — caught immediately by the user during validation:

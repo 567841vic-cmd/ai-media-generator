@@ -1359,3 +1359,76 @@ Step 6: 最終 commit → 扣 STAR
 - 「chip 名稱」≠「執行成本」— 同一個 prompt 在不同 mode 扣費差幾倍
 - 用戶提到「貴」就要立刻**重新評估 SOP 選擇**，不要繼續按假設執行
 
+
+---
+
+### 12.10.2 ⚡ 自由畫布實戰技巧（兩次驗證後新發現 2026-05-19）
+
+連續做兩個廣告（室內設計 + 米其林料理）後的補強：
+
+#### 🆕 七個新發現
+
+**1. 重用 saved workspace 比 fresh 省 1 batch**
+
+從 home page 「最近項目」直接點上次成功的自由畫布 project，model 設定（Seedance 2.0 pro）會保留，**只需重設 duration + resolution + 比例 + type + send**。比 fresh workspace 省 1 batch（不用點智能模型 + 選 Seedance 2.0 pro）。
+
+座標：「最近項目」第二張卡片 (652, 525) — viewport 751。第一張通常是最新項目（可能是空的劇本草稿），第二張才是上次成功的。
+
+**2. 「我想修改」flow reset duration 每次都發生**
+
+只要 workspace 已 commit 過至少一次（顯示「思考完成」/「已成功產生影片」），duration setting 會 reset 回 default 10s。**ALWAYS 重新設定 duration**，不能假設保留。Aspect (16:9) 通常保留，resolution (720p) 也可能 reset。
+
+**SOP：reuse workspace 必須先 click 設定 icon → 重設 duration + resolution → 才 type prompt。**
+
+**3. 藝術總監 agent 可能要求二次確認比例 + 對白語言**
+
+即使 settings panel 已設 16:9，agent 仍可能彈出：「我們從您的劇本內容暫時無法穩定推斷出影片比例和對白語言，所以這兩個選項都會開放讓您手動選擇，預設不會帶入推測值」+「現在我們正等待您確認影片的畫面比例與對白語言」。
+
+**對策：** prompt 內**明確寫出**「[比例] 16:9」「[對白] 無對白 / 中文對白 / 英文對白」。讓 agent 不用推斷。
+
+**4. STAR 不會立即扣除**
+
+submit 後 STAR 餘額不變。agent 等用戶 confirm 才 commit（之後才扣 210 STAR）。這意味著：**生成出來的「影片 1」可能只是 preview，不是 final commit**。
+
+**警告：** 不要看到「已成功產生影片」就以為已扣費 — agent 可能還在等用戶確認。**真正扣費點在「確認」或「下載」**（待驗證細節）。
+
+**5. Viewport 751 vs 705 都會出現，coord 表都要備**
+
+| 元素 | viewport 705 | viewport 751 |
+|---|---|---|
+| 模型 chip | (165, 670) | (165, 716) |
+| 設定 icon | (315, 670) | (315, 716) |
+| Send button | (487, 670) | (487, 716) |
+| Prompt input | (300, 605) | (300, 631) — 或 (200, 631) 左側避開 settings panel |
+| 比例 row | y=482 | y=525 |
+| 時長 + | (601, 555) | (601, 601) |
+| 解析度 720p | (470, 619) | (470, 664) |
+
+**規則：** 先 screenshot 看 viewport，再選 coord 表。
+
+**6. 連續批次 click 過多會 freeze renderer**
+
+連續 6+ click 在一個 batch（例如 5× duration + + 720p + screenshot）— Chrome renderer 可能凍 30s，screenshot timeout。
+
+**對策：** 批次內**最多 5-6 個 click**，超過分成兩批。或 click 之間插 `wait: 0.5` 微 pause。
+
+**7. Chinese typo tolerance — Seedance 中文 forgiving**
+
+`type` 動作有時會 mis-render 中文字（例如「主廚」→「主廄」，「滲」→「滨」），但 **Seedance 2.0 中文 tokenizer 對近似漢字有 tolerance** — 米其林料理 prompt 即使有 4-5 個 typo，仍正確 render 主廚擺盤特寫。
+
+**對策：** 不要花時間重打修 typo，**字義對就送**。但關鍵字（產品名、品牌名）建議用英文 + 引號避免 typo。
+
+#### ✅ 兩次廣告對 prompt 還原度紀錄
+
+| Session | Prompt 還原 | 時長 | STAR (預計) | 用戶滿意度 |
+|---|---|---|---|---|
+| 2026-05-19 室內設計 | 9/10（人物 / 傢俱 / 光感 / 運鏡命中）| 15s | 210 | 用戶接受 |
+| 2026-05-19 米其林料理 | 9/10（主廚 / 擺盤 / 暖光 / 鑷子動作命中）| 15s | 210 | 待用戶確認 |
+
+#### 🚀 下一輪優化方向
+
+1. **減少 batch 數**：能否把「click 設定 icon + duration + resolution + type prompt + send」合一個 batch？（要看 Chrome 是否凍）
+2. **prompt 內預埋 [比例][對白]**：減少 agent 二次確認 friction
+3. **跳過 agent 二次確認對話框**：找有沒有 setting 可以關
+4. **保留 duration setting**：跨 workspace 重用時 duration 不要 reset（platform-side 期待）
+
