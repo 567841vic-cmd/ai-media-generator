@@ -172,7 +172,7 @@ Corporate headshot of a middle-aged Asian businessman, navy suit, neutral gray b
 ## 🎯 跨模型 workflow 組合（實戰）
 
 ### 寫實戰鬥短片（當前 use case）
-1. **Nano Pro / Midjourney v7 + Hao0321 ref** → 生 key frame 圖（含武打氛圍）
+1. **Nano Pro / Midjourney v7 + your character ref** → 生 key frame 圖（含武打氛圍）
 2. **Kling 3.0 / Sora 2 / Veo 3.1** 用該圖做 i2v
    - Kling：40-80 字、handheld + whip pans
    - Sora 2：format anchor (`bodycam footage of ancient battle`)

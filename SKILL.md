@@ -1,6 +1,6 @@
 ---
 name: ai-media-generator
-description: 為使用者產生高品質的 AI 生圖、生影片、生音樂提示詞，並在需要時透過瀏覽器自動化實際送到目標平台。涵蓋 OiiOii、Kling 2.1/2.6/3.0、Seedance 1.0 Pro、Suno v5、Seedream 4.0/4.5/5、Vidu Q2/Q3、Midjourney v7、Flux 1.1 Pro / Kontext、Runway Gen-4 / Aleph、Google Veo 3.1、OpenAI Sora 2、Ideogram 3、Stable Diffusion 3.5。只要使用者提到「AI 生圖」「AI 影片」「AI 音樂」「做 MV」「做 storyboard」「寫 prompt 給 XXX」「我想用 Kling/Suno/Midjourney/Runway/Veo/Sora...」「幫我操作 OiiOii / 即夢 / 可靈」「txt2img / img2video / 文生圖 / 文生影片 / 圖生影片」「角色一致性」「多鏡頭分鏡」「運鏡」，或任何跟上述平台或影像/影片/音樂生成工作流相關的任務，都要用這個 skill。即使他們沒講明平台，只要任務是要餵給某個生成模型的 prompt，就用這個 skill 幫他們選對的平台、寫對的格式。
+description: 為使用者產生高品質的 AI 生圖、生影片、生音樂提示詞，並在需要時透過瀏覽器自動化實際送到目標平台。涵蓋 OiiOii、Kling 2.1/2.6/3.0、Seedance 1.0 / 2.0 pro、Suno v5、Seedream 4.0/4.5/5、Vidu Q2/Q3、Midjourney v7、Flux 1.1 Pro / Kontext、Runway Gen-4 / Aleph、Google Veo 3.1、OpenAI Sora 2、Ideogram 3、Nano Banana Pro、Stable Diffusion 3.5。只要使用者提到「AI 生圖」「AI 影片」「AI 音樂」「做 MV」「做 storyboard」「寫 prompt 給 XXX」「我想用 Kling/Suno/Midjourney/Runway/Veo/Sora...」「幫我操作 OiiOii / 即夢 / 可靈」「txt2img / img2video / 文生圖 / 文生影片 / 圖生影片」「角色一致性」「多鏡頭分鏡」「運鏡」，或任何跟上述平台或影像/影片/音樂生成工作流相關的任務，都要用這個 skill。即使他們沒講明平台，只要任務是要餵給某個生成模型的 prompt，就用這個 skill 幫他們選對的平台、寫對的格式。
 ---
 
 # AI Media Generator
@@ -30,7 +30,7 @@ description: 為使用者產生高品質的 AI 生圖、生影片、生音樂提
 **Auto-Pilot 禁止行為：**
 - ❌ 幫 Claude 已知的事問使用者 (「你要幾秒的影片？」— 10s 預設就好)
 - ❌ 一次拋多選項 — 選 1 個最佳 commit，讓使用者在 Preview 階段才決定改不改
-- ❌ 寫 generic prompt (`cinematic / 8k / beautiful`) — 違反下方硬規則
+- ❌ 寫純 generic 填詞 prompt (`beautiful / masterpiece / detailed`) — 違反下方硬規則（注意：`cinematic / 4K / 8K` 在新一代模型如 Seedance 2.0 是有效 token，看平台分流）
 - ❌ 代付款
 
 **使用者自然語言 flags 可 override 預設：** 使用者一句話可帶「用 Kling / 5 秒 / 豎屏 / 免費 / Ghibli 風 / 有對白」等自然語言 flag，auto-pilot 掃 [templates/user-flags.md](templates/user-flags.md) 對照表自動套用。使用者不懂術語也 OK — 「做個抖音」「可愛一點」「夢幻」都有對應翻譯。
@@ -77,14 +77,20 @@ description: 為使用者產生高品質的 AI 生圖、生影片、生音樂提
 
 ### 禁用模式（通用 + 平台特定）
 
-**通用：** 寫 `cinematic, 8k, beautiful, detailed, masterpiece` 這種 generic token — 稀釋訊號。**寧可 5 個具體 token，不要 20 個泛詞**。
+**通用原則：** **寧可 5 個具體 token，不要 20 個泛詞。** 但 generic 與否**看平台**。
 
-**平台特定（2026-04-21 實戰證據）：**
-- ❌ **Seedance / Wan / Hailuo（中文訓練影片模型）** 用導演名（`Kurosawa-style`）、技術參數堆（`35mm T1.4 Kodak 500T`）、英文戰鬥 prompt、多動詞同句、`fast` 關鍵詞、chaotic wide 多主體
-- ❌ **Flux / Nano Banana Pro** 用 artist names（訓練時被 scrub）、`--ar` 語法
-- ❌ **Runway Gen-4** 寫 >60 字 prompt（最短的模型）、synonym drift
-- ❌ **Kling** stacking 多個相機運動、>4-5 distinct nouns
-- ❌ 全平台 `--no blur` 負面 prompt（多數不吃）
+**真正全平台垃圾（任何時候都別用）：**
+- `beautiful / masterpiece / detailed / high quality / professional`（這幾個從沒在新一代模型有實證效果）
+- `--no blur` 等 flag-style 負面 prompt（多數模型不吃，用自然語言 `no blur` 反而 OK）
+
+**⚠️ 平台特定（注意「2026-04-21 vs 2026-05-18 推翻」— 模型升級會改變斷言）：**
+- ⚠️ `cinematic` / `4K` / `8K` / `35mm-50mm-85mm` — **舊版 Seedance 1.0 弱，Seedance 2.0 大量吃**（v1.1.0 修正）。Kling / Sora 2 / Veo 3.1 / MJ v7 / Flux 全吃。
+- ❌ **Seedance 2.0**：`fast`（改 `extreme speed / kinetic / rapid`）、多動詞同句、多主體獨立動作、chaotic wide 無時間區塊、個別 DP 名（藝術運動 / 品牌風格 OK）
+- ❌ **Flux / Nano Banana Pro**：artist names（訓練時被 scrub）、`--ar` 語法
+- ❌ **Runway Gen-4**：>60 字 prompt（最短的模型）、synonym drift
+- ❌ **Kling**：stacking 多個相機運動、>4-5 distinct nouns
+
+**先查 [community-prompt-patterns.md](references/community-prompt-patterns.md)** — 該檔每個模型都有「禁忌」section，且註明 cross-platform 推翻歷史。
 
 ### 驗證自檢
 
@@ -130,7 +136,7 @@ Prompt 寫完問自己：
 
 **影片 (Video)**
 - Kling → [references/kling.md](references/kling.md)
-- Seedance 1.0 Pro / Lite → [references/seedance.md](references/seedance.md)
+- Seedance 2.0 pro / 1.0 Pro / Lite → [references/seedance.md](references/seedance.md)
 - Vidu Q2 / Q3 → [references/vidu.md](references/vidu.md)
 - Runway Gen-4 / Aleph / Act-Two → [references/runway.md](references/runway.md)
 - Google Veo 3 / 3.1 → [references/veo.md](references/veo.md)
