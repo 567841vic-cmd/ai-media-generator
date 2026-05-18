@@ -1119,3 +1119,127 @@ Shot 3 (close-up, 3s): 衝擊 / 呼吸 / 腳步特寫
 ```
 
 ~130 字，符合所有 5 鐵則 + 8 維公式 + Constraints tail。
+
+---
+
+### 12.10 ⚡⚡ 室內設計廣告極速 SOP（2026-05-19 第二輪實戰優化）
+
+**情境：** 用戶說「做個 X 廣告」(室內設計 / 美妝 / 食物 / 商業)，要 Seedance 2.0 pro / 15s / 16:9 / 720p，從 0 到送出。
+
+**核心新發現（覆蓋 §12.9.x 部分）：** OiiOii 改版了，**底部工具列現在直接內建模型 + 設定 selector**，不用再進入舊「自由畫布」的 prompt 工具列流程。
+
+#### ⚠️ 三大新坑（覆蓋舊知識）
+
+| # | 坑 | 修法 |
+|---|---|---|
+| 1 | `type` 動作裡的 `\n` **會觸發 submit**（每個 newline 等於按 Enter）| Prompt 寫**單行** + `[label]` 分段；用空格替代換行 |
+| 2 | Canvas 上嵌入式 prompt input 點下去就**消失**，是 thumbnail empty frame | 一律走**左 panel** 的 input（`find` 一定找到 `自由畫布 / 自由選擇模型…`）|
+| 3 | 「智能模型」toggle 預設 ON → 系統會自選便宜模型 | 必須**手動關 toggle + 選 Seedance 2.0 pro** |
+
+#### 🎯 6-Click SOP（viewport 705 基準）
+
+從主頁 → 送出。**目標 6 個 tool call 內完成**（不含 prompt 撰寫）。
+
+**Pre-flight：** prompt 已寫成單行（無 `\n`）。
+
+```
+Step 1: tabs_create + navigate https://www.oiioii.ai/  + wait 5 + screenshot
+Step 2: click 「自由畫布」chip (758, 325) + wait 3 + screenshot
+        → 進 workspace
+Step 3: click 智能模型 chip (165, 670) → 打開 model selector
+Step 4: batch: 
+        - click 影片 tab (275, 430)
+        - click Seedance 2.0 pro (216, 530)
+        - click 設定 icon (315, 670)
+Step 5: batch (settings panel @ y=445~620):
+        - click 16:9 (346, 482) 確保選定（已預設但保險）
+        - click + 5 次 (601, 555) → 10s→15s
+        - click 720p (470, 619)
+Step 6: batch:
+        - click prompt input (300, 605) 關 settings + focus input
+        - type "[風格] ... [Constraints] ..."（**單行，無 \n**）
+        - click send (487, 670)
+
+Total: 6 batches, ~15 tool calls, ~25-35 秒。
+```
+
+#### 📐 底部工具列座標 cheat sheet（viewport 705）
+
+| 元素 | 座標 | 用途 |
+|---|---|---|
+| 智能模型 chip | (165, 670) | 開模型 selector |
+| 圖片 tab | (185, 430) | image models |
+| **影片 tab** | (275, 430) | video models（要用這個）|
+| Seedance 2.0 pro | (216, 530) | 主力模型 |
+| Seedance 2.0 fast | (216, 575) | 70% 價 / 80% 品質 |
+| Sora 2 | (216, 615) | 西方場景另選 |
+| 智能模型 toggle | (305, 397) | 預設 ON，建議**關閉**讓你的 model 選擇生效 |
+| 設定 icon (gear) | (315, 670) | 開 settings panel |
+| Send button | (487, 670) | 送出（紫色箭頭）|
+| Cost 數字 | (455, 670) | STAR 即時預覽 |
+| Prompt input | (300, 605) | 主 prompt 輸入區 |
+
+⚠️ Viewport 751 時 y 全部 +42（見 §12.9.9 cheat sheet）
+
+#### 📐 Settings panel 座標（panel 開啟後）
+
+| 元素 | 座標 |
+|---|---|
+| 比例 row (16:9 → 21:9) | y=482，x=346 / 396 / 445 / 494 / 543 / 590 |
+| 時長 minus | (544, 555) |
+| 時長 顯示 | (575, 555) |
+| 時長 plus | (601, 555) — **+1s per click** |
+| 解析度 480p | (370, 619) |
+| 解析度 **720p** | (470, 619) |
+| 解析度 1080p | (568, 619) |
+
+#### 💰 即時成本表（2026-05-19 確認）
+
+| 模型 | 5s | 10s | 15s |
+|---|---|---|---|
+| **Seedance 2.0 pro** | 70 | 140 | **210** |
+| Seedance 2.0 fast | ~49 | ~98 | ~147 |
+| Sora 2 | (查當下)| — | — |
+
+**Rule of thumb：** Seedance 2.0 pro = **14 STAR/秒**
+
+#### 🎁 隱藏 bonus：免費 reference 圖
+
+**發現於 2026-05-19：** 在第一次進 workspace 後 click canvas 上的 empty frame，再 type prompt，**系統會自動 trigger 一個 GPT-Image2 / Nano Pro 免費單張圖**（沒扣 STAR）。
+
+**運用法：**
+1. 第一次 type prompt 時故意「失敗」(`\n` 觸發) → 拿到一張**完美 reference 圖**（免費）
+2. 然後**正式**用 Seedance 2.0 pro i2v 把這張圖動畫化
+3. 視覺一致性比純 t2v 更強
+
+#### 🎬 廣告類 Prompt 範本（用 v1.1.0 8 維 + bracketed labels）
+
+```
+[風格] 高端 {主題} 商業廣告，電影級質感，Sony A7S3/cinema camera 拍攝，4K 超清，自然透光，治癒系空間美學，極簡奢華。 [場景] {空間描述}，{光線描述}，{材質/物件 3-5 項}。 [人物] {角色卡，30-50 字}。 [00:00-00:05] 鏡頭 1：{動作 1}。{運鏡 1}。{光感 / 細節}。 [00:05-00:10] 鏡頭 2：{動作 2}。{運鏡 2 含焦段}。{Macro / 特寫細節}。 [00:10-00:15] 鏡頭 3：{動作 3}。{運鏡 3}。{結尾氛圍}。 [音訊] Sound design {ambient 1-2}、{SFX 2-3}、{music genre + 樂器}。 [Constraints] 不變形、不漂移、無浮水印與字幕、保持人物臉部一致、穩定地平線、穩定時間一致性。
+```
+
+**廣告類常用 swap：**
+| 主題 | [風格] 換 | [場景] 換 | [人物] 換 |
+|---|---|---|---|
+| 室內設計 | 治癒系空間美學 | 落地窗開放式公寓 + 胡桃木地板 + 米色織物 | 30 出頭女設計師 / 男主理人 |
+| 美妝 | 高級美容廣告 | 淨白攝影棚 + 大理石檯面 + 鮮花 | 自然系模特 / 化妝師之手 |
+| 食物 | 米其林 fine dining | 暖光木質餐桌 + 蒸氣 | 主廚雙手 / 用餐者 |
+| 服飾 | 時尚編輯硬照 | 都市街景 / studio 灰幕 | 模特 + 服裝陳列 |
+| 汽車 | 高速攝影廣告 | 山路 / 海岸公路 / 夜景城市 | 駕駛特寫 / 車身 360° |
+
+#### ✅ 2026-05-19 實戰結果 - 室內設計廣告
+
+- Prompt 8 維 / 330 字 / 中文 / 3-shot 結構
+- ✅ 設計師人物精準（米白襯衫 + 卡其寬褲 + 黑髮挽起）
+- ✅ 鏡頭 2 macro 抱枕觸碰命中
+- ✅ Constraints tail 穩定（不變形 / 穩定地平線）
+- ✅ 8 分鐘生成完成
+- ✅ 210 STAR 預扣（餘額 20,873 → 待結算）
+
+#### 🚀 下一輪優化方向
+
+1. **首頁直接 chip "Seedance 2.0 故事動畫"** — 跳過自由畫布，**省 1 click**（待驗證 UI）
+2. **`find` ref 用法** — `find "main prompt textbox"` 比座標穩，但要立刻用（OiiOii ref TTL 短）
+3. **批次 8 click 改 4 click** — 把 model selector + settings 合併
+4. **`\n` 替代符**：實測 `;` / `；` / `\n` 全空格化都可，但保留 `[label]` 分段 Seedance 仍正確解析
+

@@ -2,6 +2,52 @@
 
 All notable changes to this skill are documented here.
 
+## [1.2.0] - 2026-05-19 — OiiOii Seedance 2.0 pro Express SOP
+
+Second-round real-world optimization based on a full interior-design ad generation session.
+
+### New section: `automation/site-profiles/oiioii.md §12.10`
+
+A **6-batch / ~25-second SOP** to take Seedance 2.0 pro 15s ads from home page to submitted, supersedes parts of §12.9.x where OiiOii UI has changed.
+
+### Three new gotchas documented
+
+1. **`\n` in `type` action triggers submit** — every newline = Enter keypress. Critical lesson. Single-line prompts with `[bracketed labels]` keep section semantics without using newlines.
+2. **Canvas-embedded prompt input is transient** — clicking on canvas dismisses it, it's actually a thumbnail empty frame. Always use the LEFT panel's persistent input (findable via `find "main prompt textbox"`).
+3. **「智能模型」toggle defaults ON** — system picks cheap models unless manually overridden. Must click model selector + pick Seedance 2.0 pro explicitly.
+
+### Verified coordinates (viewport 705)
+
+Full cheat sheet for the bottom toolbar + settings panel, validated against current OiiOii UI:
+- Model chip, image/video tabs, all 4 video models
+- Aspect ratio row (16:9 / 9:16 / 4:3 / 3:4 / 1:1 / 21:9)
+- Duration controls (+1s per click, 10s default)
+- Resolution buttons (480p / 720p / 1080p)
+- Send button, cost preview
+
+### Cost matrix (verified)
+
+| Model | 5s | 10s | 15s |
+|---|---|---|---|
+| Seedance 2.0 pro | 70 | 140 | 210 |
+| Seedance 2.0 fast | ~49 | ~98 | ~147 |
+
+Rule of thumb: **Seedance 2.0 pro = 14 STAR/sec**.
+
+### Hidden bonus discovered
+
+Typing on the canvas-embedded input triggers a **free GPT-Image2 / Nano Pro** single-frame generation (no STAR cost). This produces a perfect reference image that can be used for i2v in the next step, dramatically improving visual consistency.
+
+### Commercial ad prompt template
+
+A `{swap}`-style template for ad prompts using v1.1.0 8-dimension + bracketed labels structure, with 5 vertical-market variations (interior / beauty / food / fashion / automotive).
+
+### Files changed
+
+- `automation/site-profiles/oiioii.md` — +124 lines (new §12.10)
+
+---
+
 ## [1.1.0] - 2026-05-18 — Seedance 2.0 Community Evidence Update
 
 Major upgrade to the Seedance 2.0 playbook based on 107 community-curated prompts.
