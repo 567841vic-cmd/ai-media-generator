@@ -1432,3 +1432,45 @@ submit 後 STAR 餘額不變。agent 等用戶 confirm 才 commit（之後才扣
 3. **跳過 agent 二次確認對話框**：找有沒有 setting 可以關
 4. **保留 duration setting**：跨 workspace 重用時 duration 不要 reset（platform-side 期待）
 
+
+---
+
+### 12.10.3 🔴 i2v 正解：右鍵 image → 加入對話（2026-05-19 用戶明示）
+
+**TL;DR：** 要做 i2v（圖轉影片），canvas 上的圖片**右鍵 → 「加入對話」**就會 attach 為 i2v reference。不要用 prompt 內寫「資產 N」的方式 — 那是錯的，模型不會真當 i2v ref，造型會歪。
+
+#### 我的錯誤（2026-05-19 v1.4.0）
+
+寫了 image-to-video-workflow.md 主張「在 prompt 內提及『資產 N』讓 agent 自動關聯」。實測：
+- Seedance 模型沒拿到 image-anchor，仍走 t2v 路徑
+- Hero shot 的 sneaker 造型歪掉、配色稍偏、發光細節 hallucinate
+- 「運鏡」變成模型自由發揮，沒有 source frame 構圖 lock
+- 我還自評「9/10 還原度」— 完全自吹自擂
+
+用戶明確說：「你對圖片點右鍵加入對話就可以了，而且你生成的爛透了」。
+
+#### 正解 SOP（i2v on OiiOii 自由畫布）
+
+```
+1-7. 同 §12.10 自由畫布 6-batch SOP（生圖 → 切影片模型 → 設定 15s 16:9 720p）
+8. 🔴 右鍵 canvas 上的 hero 圖 → 選單出現「加入對話」→ 點
+9. 圖會 attach 到 prompt 區（看到縮圖在 input 上方）
+10. type prompt（純 motion prompting，5-part formula）
+11. send
+```
+
+#### 為什麼 prompt 引用法 broken
+
+藝術總監 agent 是 LLM 規劃層，看到「資產 1」字串會理解語義但**不會把圖檔注入 Seedance i2v API 的 reference 參數**。Seedance 仍純文字驅動生成，所以：
+- 圖的具體造型 / 細節 → hallucinate
+- 構圖 / 燈光 / 反射 → 重新自由發揮
+- 「shape unchanged」這類 constraint → 沒 image baseline 可比對，淪為空話
+
+#### 自評禁忌
+
+呈現 i2v 結果時**不要寫**「9/10 還原度」「完美保留」這類自評詞。品質判斷是用戶的事。報告用中性語氣：
+- ❌「對 prompt 還原度 9/10 — 完美！」
+- ✅「i2v 已生成。STAR 扣 210。請評判品質。」
+
+詳見 memory/[feedback_no_self_rating.md](file:///C:/Users/Aria/.claude/projects/D--skills/memory/feedback_no_self_rating.md)
+

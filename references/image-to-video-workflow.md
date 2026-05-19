@@ -308,7 +308,7 @@ Magazine-spread layout, paper texture, subtle drop shadows between tiles.
 
 ## 🚀 完整 i2v workflow（OiiOii 自由畫布實戰版）
 
-按 [oiioii.md §12.10](../automation/site-profiles/oiioii.md) 自由畫布 SOP，**i2v 是 9-batch 流程**（比 t2v 多 3-4 batch）：
+按 [oiioii.md §12.10](../automation/site-profiles/oiioii.md) 自由畫布 SOP，**i2v 是 10-batch 流程**（含右鍵加入對話那一步）：
 
 ```
 === 階段 A：生圖（5-batch）===
@@ -318,12 +318,15 @@ Magazine-spread layout, paper texture, subtle drop shadows between tiles.
 4. click send → wait 60s
 5. screenshot 驗收 hero 圖
 
-=== 階段 B：轉影片（4-batch）===
+=== 階段 B：轉影片（5-batch）===
 6. click 模型 chip → 切「影片」tab → 選 Seedance 2.0 pro
 7. click 設定 → reset 比例 16:9 + duration 15s + 解析度 720p
-8. click prompt input → type i2v prompt（明確寫「以資產 N 為起始幀」+ 5-part formula）→ click send
-9. background sleep 480s → 驗收 i2v 影片
+8. 🔴 **右鍵 canvas 上的 hero 圖 → 選「加入對話」** ← 關鍵！圖會 attach 到 prompt 區
+9. click prompt input → type i2v prompt（5-part formula：Preserve / Camera / Motion / Final / Avoid，**不要寫「資產 N」**，因為圖已經 attach）→ click send
+10. background sleep 480s → 驗收 i2v 影片
 ```
+
+⚠️ **絕對不要漏掉 step 8**（右鍵加入對話）— 跳過會走 t2v 路徑，造型歪、運鏡爛、無 image-anchor 質感。
 
 **成本：**
 - 階段 A：7 STAR（GPT-Image2，~NT$1.7）
@@ -341,9 +344,26 @@ Magazine-spread layout, paper texture, subtle drop shadows between tiles.
 
 ## 🆕 OiiOii 自由畫布 i2v 特殊技巧（2026-05-19 實戰學到）
 
-### 1. 在 prompt 內引用「資產 N」即可，不用拖拉
+### 1. 🔴 **正解：右鍵 image → 加入對話**（2026-05-19 用戶明示）
 
-OiiOii 藝術總監 agent 會解析 prompt 內的「資產 1 / 資產 2」字串自動關聯。**不用** click + button（那是 local file upload）+ 不用 drag canvas（會 pan canvas 把 frame 移走）。
+OiiOii canvas 上的圖片，**右鍵點擊會出現「加入對話」選項** — 這才是把圖片設為 i2v reference 的**正確操作**。
+
+⛔ **不要用「資產 N」prompt 引用法** — 那是 v1.4.0 我寫錯的，模型不會真的把圖當 i2v 起始幀，造型會歪、運鏡會走 t2v 邏輯失去 image-anchor，廣告質感全失。
+
+**正確 SOP：**
+```
+1. 生 hero 圖（GPT-Image2 / Nano Banana 等）
+2. 切到影片模型（Seedance 2.0 pro 等）
+3. 右鍵 canvas 上的 hero 圖 → 選「加入對話」
+4. 圖會作為 i2v reference attach 到 prompt 區（看到 thumbnail）
+5. type prompt（5-part formula：Preserve / Camera / Motion / Final / Avoid）
+6. send
+```
+
+**為什麼 prompt 引用法失敗：**
+- 藝術總監 agent 看到「資產 1」字串可能會語義關聯到對應 asset，但**不會真的把圖檔送進 Seedance i2v API endpoint**
+- 模型仍走 t2v 路徑生成，所以「圖中的具體造型 / 細節」會 hallucinate 變形
+- Constraint「shape unchanged」沒有實際 image-anchor 可比對，淪為空話
 
 ### 2. canvas 上的 frame 可被 drag-move（會破壞 layout）
 

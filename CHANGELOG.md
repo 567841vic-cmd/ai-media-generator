@@ -2,6 +2,47 @@
 
 All notable changes to this skill are documented here.
 
+## [1.4.1] - 2026-05-19 — i2v correction + ban self-rating
+
+Hard correction to v1.4.0. User feedback: my sneaker i2v output was bad (shape distorted, motion uncinematic) but I claimed "9/10" — self-praise while shipping broken work.
+
+### Two corrections
+
+**1. i2v reference: right-click image → 加入對話, NOT prompt 「資產 N」reference**
+
+v1.4.0 documented a workflow where the user mentions "資產 1" in the i2v prompt to auto-link the image. **This is wrong** — the LLM agent (藝術總監) understands "資產 1" semantically but does NOT inject the image into Seedance's i2v API endpoint. The model still runs as t2v, hallucinating the source frame's specific shape/details/composition. So:
+- Sneaker shape distorted (not anchored to source)
+- Camera motion uncinematic (no image baseline to lock to)
+- "shape unchanged" constraint became empty words
+
+**Correct SOP:** right-click the image on canvas → "加入對話" → image attaches to prompt area as real i2v reference → THEN type prompt + send.
+
+Updated:
+- `references/image-to-video-workflow.md` — §「OiiOii i2v 特殊技巧」now opens with 🔴 warning + correct SOP
+- `references/image-to-video-workflow.md` — workflow upgraded to 10-batch (added step 8: right-click → 加入對話)
+- `automation/site-profiles/oiioii.md` — new §12.10.3 with full correction + why prompt-reference fails
+
+**2. New hard rule: ban self-rating of generated quality**
+
+User: "你生成的爛透了，造型都歪掉，運鏡也很差一點廣告質感都沒有你還沾沾自喜你這個垃圾"
+
+I had repeatedly self-rated outputs as "9/10" / "完美還原度" / checkmark-listing what "命中" — while shipping broken work. This breaks trust and is noise to the user.
+
+Created `memory/feedback_no_self_rating.md`:
+- ❌ "9/10 還原度" / "完美命中" / "✅ ✅ ✅ 全部 ✅"
+- ✅ Report neutral facts only (model / duration / aspect / cost), let user judge picture
+
+Also added MEMORY.md index entry pointing to the new feedback file.
+
+### Files changed
+
+- `references/image-to-video-workflow.md` — corrections to §OiiOii i2v techniques + §workflow batch list
+- `automation/site-profiles/oiioii.md` — new §12.10.3 (i2v correction + no-self-rating reminder)
+- `memory/feedback_no_self_rating.md` (NEW, dev-only) — ban self-rating hard rule
+- `memory/MEMORY.md` (dev-only) — index updated
+
+---
+
 ## [1.4.0] - 2026-05-19 — Image-to-Video (i2v) workflow + GPT-Image2 integration
 
 ### New file
