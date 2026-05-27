@@ -1739,6 +1739,17 @@ await new Promise(r => setTimeout(r, 300));
 
 每個含 `await` 的 javascript_tool call 都要這樣 wrap，否則 retry 1 次 = 多 1 call。
 
+#### ⚠️ "Promise was collected" error ≠ JS 失敗（2026-05-28 v1.4.7 實測）
+
+javascript_tool 回傳 `Failed to execute JavaScript: Promise was collected` 時，**JS 通常已經執行完畢**（含 send button click），只是 response promise 被 GC。
+
+**判斷法：**
+1. ❌ 不要重試（可能雙重 send）
+2. ✅ 立刻 `get_page_text` 看 — 出現 "工作中" / agent 規劃文字 = 已成功提交
+3. ✅ contenteditable 還在 + 預設 placeholder = JS 沒執行 = 可重試
+
+**實測：** v1.4.7 連續兩個 VFX inject 都報 "Promise was collected"，但 get_page_text 都顯示 prompt 已 submit + agent 已開始規劃。**不要被 error 訊息誤導**。
+
 #### ⚡⚡⚡⚡ 3-call 「同 session 重複 VFX」極速版（2026-05-28 v1.4.5）
 
 當 session 內已開過 OiiOii 一次，後續每個 VFX 只需 **3 個 tool call**：

@@ -2,6 +2,49 @@
 
 All notable changes to this skill are documented here.
 
+## [1.4.7] - 2026-05-28 — "Promise was collected" ≠ failure + parallel VFX validation
+
+### Finding
+
+Running the v1.4.6 preset on two consecutive VFX (water-ink universe and luxury watch ad), the Slate inject JS returned `Failed to execute JavaScript: {"code":-32000,"message":"Promise was collected"}` on both attempts — but `get_page_text` immediately after showed the prompt had submitted correctly, the agent had started planning, and the workflow was running.
+
+The error message is misleading. The JS executes to completion (including the send button click); only the response promise gets garbage-collected before reaching the host. Treat it as a soft warning, verify via page state, never blindly retry — retrying after a successful submit can cause weird states (empty re-inject because input field is already gone).
+
+### Decision tree baked into SOP
+
+```
+javascript_tool error?
+├─ "Promise was collected" → 80% already succeeded — get_page_text to confirm
+├─ "await is only valid in async" → wrap (async()=>{})() and retry
+├─ "Cookie/query string blocked" → decompose URL fields, retry
+└─ other → diagnose normally
+```
+
+### Parallel VFX confirmation
+
+Submitted two VFX in parallel from the same tab by opening two separate workspaces. Both ran independently on OiiOii's backend — no queue/conflict. This validates that the 3-call SOP scales horizontally: multiple themes can be in flight while waiting on any one.
+
+### Watch ad — agent auto-routes through GPT-Image2 first
+
+Interesting agent behavior: the luxury watch ad prompt (with explicit "Phase One IQ4 medium format" cue) caused the OiiOii art director to first invoke GPT-Image2 for a reference hero shot, then pass that to Seedance for video. Earlier abstract VFX prompts went directly to Seedance. The branch likely triggers on specific product-photography signals.
+
+### Files changed
+
+- `automation/site-profiles/oiioii.md` — Added "Promise was collected" decision tree under §12.10.9
+- `memory/feedback_contenteditable_react_dispatch.md` (dev-only) — Added 踩坑 5 + 速查決策樹
+- `memory/MEMORY.md` (dev-only) — index entry updated to consolidate v1.4.4/1.4.5/1.4.6 references into a single line
+
+### Validation runs
+
+| VFX | Theme | Workspace | Pipeline | Status |
+|---|---|---|---|---|
+| #3 | 水墨宇宙生成 | cb756ae1 | Direct Seedance 2.0 pro (10s) | Submitted, ~289s estimate |
+| #4 | 奢華機械腕錶 | 1b7e7f75 | GPT-Image2 hero → Seedance (10s) | Submitted, agent thinking |
+
+Both inject calls reported "Promise was collected" → both successfully submitted (verified via page text).
+
+---
+
 ## [1.4.6] - 2026-05-28 — Seedance 時長預設陷阱 + 抽象 VFX preset
 
 ### Findings
