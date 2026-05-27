@@ -2,6 +2,29 @@
 
 All notable changes to this skill are documented here.
 
+## [1.4.6] - 2026-05-28 — Seedance 時長預設陷阱 + 抽象 VFX preset
+
+### Findings
+
+**Seedance 2.0 pro auto-routes to 10s default in OiiOii free canvas.** Wrote a 15-second prompt with `[00:00-00:05][00:05-00:10][00:10-00:15]` timestamps. Agent narration confirmed the intent ("從液態水銀球轉化為克萊因瓶，最終凝聚成鑽石"), but the output was capped at 10 seconds (`00:00 / 00:10`). The agent's planning narration even said «完整的10秒抽象動態影片» — it interpreted the brief as 10s without honoring the embedded timestamps.
+
+**Root cause:** Smart-model routing doesn't parse prompt-embedded timestamps to set the backend duration parameter. Default for Seedance 2.0 pro in free canvas = 10s. To get 15s, must click the sliders icon and explicitly pick the 15s option before submitting.
+
+### Files changed
+
+- `automation/site-profiles/oiioii.md` — Added "時長預設陷阱" section under §12.10.9, including JS to set 15s via the sliders panel, plus a slimmed 10s prompt formula for when 10s is acceptable
+- `templates/preset-packs.md` — Added new preset #27a "純抽象 VFX — 時空裂縫 / 維度突破 (15s, OiiOii-safe)" with 8 swap-point placeholders, 6 alternate themes, and an explicit list of copyright-trigger categories to avoid
+
+### Why a preset for this
+
+Two consecutive sessions made cinematic VFX prompts that got blocked by OiiOii's copyright filter (Pacific Rim, then a no-IP-named mecha — the genre itself was flagged). The safe alternative is pure abstract: geometry, particles, light, fluid simulation. The new preset codifies the working 3-shot formula with placeholders so future abstract VFX requests don't have to re-derive what's OiiOii-safe.
+
+### Empirical update to v1.4.5
+
+VFX #2 confirmed end-to-end: 140 STAR, 10s output (vs 15s requested due to the duration default), no anime fallback, agent narration matched the prompt intent. Both workspaces in this session used different send-button class names — the v1.4.5 fallback selectors caught both.
+
+---
+
 ## [1.4.5] - 2026-05-28 — 3-call 極速 SOP + 額外踩坑記錄
 
 Post-v1.4.4 validation iteration. Ran a second VFX with a brand-new theme to verify the Slate injection chain end-to-end. The injection worked correctly (correct agent narration, no anime fallback), but uncovered three additional gotchas that needed baking before the workflow is truly reliable across invocations.

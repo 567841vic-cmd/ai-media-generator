@@ -1822,6 +1822,53 @@ await new Promise(r => setTimeout(r, 300));
 
 從 15-20 → 5-6 = **70%+ call 節省**
 
+#### ⚠️ 時長預設陷阱 (2026-05-28 v1.4.5 實測)
+
+**症狀：** Prompt 寫 `[00:00-00:05][00:05-00:10][00:10-00:15]` 三鏡 15s，agent 卻 narration「完整的 10 秒抽象動態影片」→ 實際輸出**只有 10s 兩個半鏡**。
+
+**根因：** Seedance 2.0 pro 在 OiiOii 自由畫布**預設時長 = 10s**。智能模型自動 routing 不會傳 prompt 內 timestamps 給後端 API。
+
+**解法（要 15s）：在 inject prompt 前 click sliders icon 設時長：**
+
+```js
+// 在 Phase B 之後、Phase C 之前插一步
+(async () => {
+  // sliders icon ~(225, 805) — bottom toolbar 第 5 個
+  const btn = [...document.querySelectorAll('button')].find(b => {
+    const cls = (b.className||'').toString();
+    return cls.includes('_select-btn_18t71_171') ||
+           (b.getBoundingClientRect().x === 367 && b.getBoundingClientRect().y > 750);
+  });
+  if(btn) btn.click();
+  await new Promise(r => setTimeout(r, 400));
+  // 開啟設定 panel → 點時長「15s」option（座標 ~440, 620 或 find by text）
+  const opt15 = [...document.querySelectorAll('*')].find(el =>
+    (el.textContent.trim() === '15s' || el.textContent.trim() === '15 秒') &&
+    el.children.length === 0);
+  opt15?.click();
+  await new Promise(r => setTimeout(r, 200));
+  // 關閉 panel — click 別處
+  document.body.click();
+  return '15s set: ' + !!opt15;
+})()
+```
+
+**或者直接接受 10s 預設** — prompt 改寫成 [00:00-00:05][00:05-00:10]，省一個 call。
+
+#### 對應 Prompt 公式（10s 版）
+
+```
+[00:00-00:05] {Shot 1}. Smooth transition to: {Shot 2 hint}.
+[00:05-00:10] {Shot 2}. Final beat: {Shot 2 ending freeze}.
+
+[視覺風格] ...
+[色彩] ...
+[音訊] ...
+[Constraints] ...
+```
+
+只 2 個 shot + final beat，更精簡。
+
 
 
 #### Phase C — 等待 + 取結果（call 6+）
