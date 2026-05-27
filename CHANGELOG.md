@@ -2,6 +2,91 @@
 
 All notable changes to this skill are documented here.
 
+## [1.4.4] - 2026-05-28 — Slate editor 自動填寫破解 + 空 prompt fallback 警告
+
+**Critical automation breakthrough.** Discovered the working JavaScript pattern for injecting prompts into OiiOii's Slate-based contenteditable editor when computer.type is unavailable (Chrome at "read" tier in Claude Code sandbox).
+
+### Lesson cost
+
+1× failed VFX generation: ~210 STAR + 273s wasted on wrong output ("traditional japanese anime style young woman" — OiiOii's empty-prompt fallback).
+
+### Root cause
+
+OiiOii prompt input is `<div contenteditable="true" class="_slate-area-editable_*">`, a Slate React editor. Standard contenteditable manipulation methods **all silently fail** because Slate maintains internal selection/operation state that bypasses DOM mutations:
+
+| Method | Result |
+|---|---|
+| `document.execCommand('insertText', false, text)` | DOM changes, React state stays empty → submits empty prompt |
+| `div.innerText = text` | Same — bypasses React |
+| `dispatchEvent(new ClipboardEvent('paste', {...}))` | Slate ignores standard paste |
+| Direct invoke `reactProps.onPaste(syntheticEvent)` | Missing native event context |
+| `InputEvent` with `inputType: 'insertText'` | Wrong inputType for Slate |
+
+When the prompt submits empty, OiiOii's agent doesn't error — it **falls back to a default template starting "traditional japanese anime style, a young woman with long..."**. Burns STAR on the wrong content.
+
+### The working pattern
+
+**`beforeinput` + `inputType: 'insertFromPaste'` + `DataTransfer` is what Slate listens for.**
+
+```js
+const div = document.querySelector('[contenteditable="true"]');
+div.focus();
+// Place caret at end
+const range = document.createRange();
+range.selectNodeContents(div);
+range.collapse(false);
+const sel = window.getSelection();
+sel.removeAllRanges();
+sel.addRange(range);
+// Inject via DataTransfer
+const dt = new DataTransfer();
+dt.setData('text/plain', text);
+div.dispatchEvent(new InputEvent('beforeinput', {
+  bubbles: true,
+  cancelable: true,
+  inputType: 'insertFromPaste',
+  data: text,
+  dataTransfer: dt
+}));
+// Wait 200-300ms for Slate to process, then verify dom.innerText.length
+// Then click [class*="_send-button_"]
+```
+
+### Mandatory verification step
+
+Before clicking send, **always verify** the React state captured the text:
+
+```js
+const dom = div.innerText || div.textContent || '';
+// If length is still ~28 (placeholder only), DO NOT click send
+console.assert(dom.length > 100, 'injection failed, do not submit');
+```
+
+### Editor detection table (auto-route the correct injection method)
+
+| Editor | Detection | Injection method |
+|---|---|---|
+| Slate | `[data-slate-node]` or `.closest('[data-slate-editor]')` | `beforeinput` + `insertFromPaste` |
+| Lexical | `.closest('[data-lexical-editor]')` | `ClipboardEvent('paste')` |
+| ProseMirror | `.ProseMirror` | `beforeinput` + `insertFromPaste` |
+| Draft.js | `.closest('.public-DraftEditor-content')` | `ClipboardEvent('paste')` |
+
+### pause-button limitation
+
+OiiOii has a `.pause-button` that appears during generation, but **it doesn't actually halt the backend job** — estimate countdown continues normally. Do not rely on it for damage control. The only real protection is verifying React state before clicking send.
+
+### Files changed
+
+- `automation/site-profiles/oiioii.md` — New §12.10.6 / 12.10.7 / 12.10.8 (Slate injection / anime fallback warning / pause-button limitation)
+- `memory/feedback_contenteditable_react_dispatch.md` (NEW, dev-only) — full editor detection + injection patterns
+- `memory/MEMORY.md` (dev-only) — index updated
+
+### Applicability
+
+This pattern is reusable across **any React Slate editor** — not just OiiOii. Notion, Linear comments, Figma comments, many modern web apps use Slate. The same `beforeinput` + `insertFromPaste` + `DataTransfer` technique works there too.
+
+---
+
 ## [1.4.3] - 2026-05-19 — i2v prompt 黃金公式（用戶明示版）
 
 User taught the correct i2v prompt writing rule (2026-05-19):

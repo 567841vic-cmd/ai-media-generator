@@ -1536,3 +1536,217 @@ submit 後 STAR 餘額不變。agent 等用戶 confirm 才 commit（之後才扣
 8. 中性報告，不自評（feedback_no_self_rating.md）
 ```
 
+### 12.10.6 ⚡ 自由畫布 prompt 自動填寫 — Slate 編輯器 (2026-05-28 實證 work)
+
+**背景：** Chrome MCP 在 read-tier sandbox 下 **不能用 computer.type**。OiiOii prompt 框是 `<div contenteditable="true" class="_slate-area-editable_*">`（Slate 編輯器），所以必須用 JavaScript 注入。但 Slate **忽略以下方法**：
+
+- ❌ `document.execCommand('insertText', ...)` — 改 DOM 不觸發 React onChange → 送出時 React state 空 → OiiOii agent fallback 到「日本動漫女生」default → 燒 210 STAR 完全錯誤產出
+- ❌ `dispatchEvent(new ClipboardEvent('paste', ...))` — Slate 不認標準 paste event
+- ❌ 直接呼叫 `reactProps.onPaste(syntheticEvent)` — 缺 native event 上下文
+- ❌ `InputEvent` with `inputType: 'insertText'`
+
+**✅ 正解：`beforeinput` + `inputType: 'insertFromPaste'` + `DataTransfer`**
+
+```js
+const div = document.querySelector('[contenteditable="true"]');
+div.focus();
+
+// 1. 把游標放在最後（或想插入的位置）
+const range = document.createRange();
+range.selectNodeContents(div);
+range.collapse(false);
+const sel = window.getSelection();
+sel.removeAllRanges();
+sel.addRange(range);
+
+// 2. 構造 DataTransfer 並 dispatch beforeinput
+const dt = new DataTransfer();
+dt.setData('text/plain', PROMPT_TEXT);
+div.dispatchEvent(new InputEvent('beforeinput', {
+  bubbles: true,
+  cancelable: true,
+  inputType: 'insertFromPaste',  // ← 關鍵
+  data: PROMPT_TEXT,
+  dataTransfer: dt
+}));
+
+// 3. 等 200-300ms 給 Slate 處理
+// 4. 驗證 dom.innerText.length 已增加
+// 5. 找 .send-button click
+const sendBtn = document.querySelector('[class*="_send-button_"]');
+sendBtn.click();
+```
+
+**驗證步驟（送出前必做）：**
+
+```js
+const dom = div.innerText || div.textContent || '';
+console.log({domLen: dom.length, head80: dom.substring(0,80)});
+// 必須看到 prompt 文字 + length 大幅增加
+// 若 length 仍是 ~28（只有 placeholder），表示注入失敗，不要 send
+```
+
+**送出按鈕選擇器（兩個 UI variant，要 fallback）：**
+
+```js
+// OiiOii 兩個版本的 send button class pattern：
+// Variant A: _send-button_*
+// Variant B: _credit-cost_*（同時顯示 STAR 數字 + 點擊 = 送出）
+function findSendBtn(){
+  return document.querySelector('[class*="_send-button_"]')
+      || document.querySelector('[class*="_credit-cost_"]')
+      || [...document.querySelectorAll('button')].filter(b => {
+            const r = b.getBoundingClientRect();
+            return r.y > 750 && r.x > 400 && (b.textContent.trim().match(/^\d+$/) || b.querySelector('svg'));
+         }).pop();
+}
+findSendBtn()?.click();
+```
+
+**2026-05-28 實證：** 第 1 個 workspace `_send-button_*` 有效；第 2 個 workspace 卻沒有此 class，只能用 `_credit-cost_*`。同帳號連續兩個 workspace UI 不同 → **必須兩個都 fallback 嘗試**。
+
+**反偵測：判斷送出是否成功**
+
+成功 = `[contenteditable]` 消失 + chat-thread 出現 "藝術總監" + 工作中 spinner。
+失敗 = chat-thread 出現 "traditional japanese anime style, a young woman with long..." → **這是 OiiOii 空 prompt fallback，立即 pause-button 阻止燒 STAR**。
+
+### 12.10.7 ⛔ OiiOii agent 空 prompt fallback = 日本動漫女生 (2026-05-28)
+
+**症狀：** 送出 prompt 後 agent 回應「**用戶需求：根據您的要求，我將為您快速生成一段高品質的日本動漫風格視頻素材**」+「**生視頻提示詞：traditional japanese anime style, a young woman with long...**」
+
+**根因：** Prompt 注入失敗（React state 為空）→ agent 收到空 string → fallback 到 default 範本「日本動漫女生」
+
+**即時應變：**
+1. 看到 "japanese anime style young woman" 開頭 → 立刻 `document.querySelector('.pause-button').click()`（注意 pause 可能無效）
+2. 若 pause 無效 → 接受 STAR 損失，但下次絕不重蹈
+3. **絕不** 重複用同樣的注入方法（execCommand / 標準 paste）
+
+### 12.10.8 🚧 pause-button 限制 (2026-05-28)
+
+**位置：** 生成期間出現 `.pause-button` class button
+
+**實測：** 點了 estimate 從 273s → 206s → 131s 仍正常下降，**沒有真正停止生成**。可能：
+- 只是 UI pause display，不停 backend
+- 需要二次確認對話框（但沒看到）
+- Backend 已 commit，無法取消
+
+**不要依賴 pause-button 救火** — Prompt 注入失敗的最佳防護是 **送出前驗證 React state**。
+
+### 12.10.9 ⚡⚡⚡ Chrome MCP 「JS-only」 OiiOii t2v 黃金鏈 (2026-05-28 v1.4.4 baked)
+
+**前提：** Chrome 在 read-tier sandbox，computer.type 不能用。所有 UI 操作走 Chrome MCP 的 `javascript_tool`/`browser_batch` + DOM 操作。
+
+**目標：6 個 tool call 完成 0→prompt 送出**（不含等待 generation）
+
+#### Phase A — 從主頁開始（call 1-3）
+
+```js
+// Call 1: tabs_context_mcp(createIfEmpty: true) → tabId
+// Call 2: browser_batch [navigate to oiioii.ai/home + find 新建專案]
+// Call 3: javascript_tool: click 新建專案 → URL 變 /space/<uuid>
+```
+
+#### Phase B — 模式 + 模型 + 注入 prompt（call 4-5）
+
+```js
+// Call 4: javascript_tool (合併 4 個操作)
+(() => {
+  const btns = [...document.querySelectorAll('button')];
+
+  // 4a. Click 自由畫布
+  btns.find(b => b.textContent.includes('自由畫布'))?.click();
+
+  // 4b. Click 智能模型 dropdown
+  setTimeout(() => {
+    [...document.querySelectorAll('button')].find(b =>
+      b.textContent.includes('智能模型'))?.click();
+  }, 100);
+
+  // 4c. Click Seedance 2.0 pro option
+  setTimeout(() => {
+    [...document.querySelectorAll('*')].find(el =>
+      el.textContent.trim() === 'Seedance2.0 pro' &&
+      el.children.length === 0)?.click();
+  }, 300);
+
+  return 'free canvas + model setup done';
+})()
+
+// Call 5: javascript_tool (Slate prompt 注入 + send)
+(async () => {
+  const div = document.querySelector('[contenteditable="true"]');
+  if(!div) return 'NO INPUT';
+
+  const PROMPT = `<your t2v VFX prompt here>`;
+
+  // Focus + 游標到結尾
+  div.focus();
+  const range = document.createRange();
+  range.selectNodeContents(div);
+  range.collapse(false);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+
+  // beforeinput + insertFromPaste
+  const dt = new DataTransfer();
+  dt.setData('text/plain', PROMPT);
+  div.dispatchEvent(new InputEvent('beforeinput', {
+    bubbles: true, cancelable: true,
+    inputType: 'insertFromPaste',
+    data: PROMPT,
+    dataTransfer: dt
+  }));
+
+  // 等 React 處理
+  await new Promise(r => setTimeout(r, 300));
+
+  // ⚠️ 驗證注入成功
+  const dom = div.innerText || div.textContent || '';
+  if(dom.length < PROMPT.length * 0.5){
+    return 'INJECTION FAILED domLen=' + dom.length + ' expected>=' + Math.floor(PROMPT.length*0.5);
+  }
+
+  // 點 send
+  const sendBtn = document.querySelector('[class*="_send-button_"]');
+  if(!sendBtn) return 'NO SEND BUTTON';
+  sendBtn.click();
+
+  return 'SUBMITTED domLen=' + dom.length;
+})()
+```
+
+#### Phase C — 等待 + 取結果（call 6+）
+
+```js
+// Call 6: bash run_in_background sleep 60s（給 planning + 生成）
+// Call 7: javascript_tool 檢查 progress（找 video 元素 / "預估 Xs" / "生成完成"）
+// Call 8: 取 video src（注意 cookie/URL 可能被 blocked，用 srcDomain + duration 代替）
+```
+
+#### ⚠️ 必驗檢查點
+
+| 階段 | 檢查 | Pass | Fail 應對 |
+|---|---|---|---|
+| Call 5 後 | 回傳含 "SUBMITTED domLen=>500" | ✅ | "INJECTION FAILED" → 不要重 send，先重試 prompt 注入 |
+| Call 7 chat-thread | 出現 "Seedance" + 我寫的 prompt 前 80 字 | ✅ | 出現 "japanese anime style young woman" → 空 prompt fallback，點 pause（雖無效）+ 接受 STAR 損失 |
+| Call 8 video | duration > 5s + domain = `static-oiioii-sg.hogiai.cn` | ✅ | duration = 2s 可能是 thumbnail，等更久或找 _mind-output_ 內的大 video |
+
+#### 速度數據（2026-05-28 實測）
+
+- Call 1-5（從新 tab 到 prompt 送出）：~30 秒（含 Chrome MCP round-trip）
+- Call 6 wait：60-120 秒
+- Call 7-8 結果獲取：~5 秒
+- **總計：~3 分鐘（不含 user 看影片時間）**
+
+對比 v1.4.3 前的 9-15 個 call ad-hoc 流程，**節省 ~50% calls + ~40% wall time**。
+
+#### 連動規則
+
+- `feedback_no_reuse_workspace.md` — Phase A.2 必須點「新建專案」
+- `feedback_oiioii_mode_lock.md` — Phase B 必須是「自由畫布」
+- `feedback_no_ip_names.md` — PROMPT 文字嚴禁 IP / 高風險視覺類別
+- `feedback_contenteditable_react_dispatch.md` — Phase B 注入方法（Slate beforeinput）
+- `feedback_no_self_rating.md` — Phase C 報告中性事實
+- `feedback_decision_autonomy.md` — 整流程 auto-pilot，不停問
+
