@@ -932,7 +932,8 @@ saturated, dry not glistening, dusty
 [Constraints] 產品 rigid 形狀不變、ONE camera motion per shot、無變形漂移、無文字、平滑轉場
 ```
 
-**Why 鎖形狀有效：** 圖已把產品輪廓 100% 定死，i2v 只負責「動」，模型沒有重新詮釋形狀的自由度 → 變形機率驟降。**t2v 產品三次還變形 → 必切此流程。**
+**Why 鎖形狀有效：** 圖把「產品類型 + 質感 + 構圖 + 打光」鎖得很牢，i2v 主要負責「動」→ 變形機率比 t2v 驟降。**t2v 產品三次還變形 → 必切此流程。**
+**⚠️ 實測校準（2026-06-05）：** Seedance i2v 不是像素級凍結，瓶身比例仍可能中度漂移。要更硬的凍結 → hero 圖背景極簡 + 運鏡越小越好 + 或改 **Kling 3.0 Start Frame + Motion Brush**（產品本體不刷 = 幾乎不動）。
 
 **Swap：** `{PRODUCT}` / `{SURFACE}` / `{COLOR}` / orbit 角度（產品鏡頭最多 180°，別 360°）
 

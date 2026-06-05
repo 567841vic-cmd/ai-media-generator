@@ -46,7 +46,12 @@
    - `the product maintains consistent shape, label, and proportions across all frames`
    - `rigid object, no deformation, no morphing, structural integrity preserved`
 3. **限制運鏡幅度**：產品鏡頭用 `slow`、`subtle`、`gentle`，避免 `fast orbit 360`。一次最多 180° 環繞。
-4. **i2v 優於 t2v 做產品**：先用 GPT-Image2 / Seedream / MJ 定死產品 hero 圖 → i2v 只動畫化。形狀已被圖鎖死，模型不會亂改。**這是產品廣告最可靠路徑**。
+4. **i2v 優於 t2v 做產品**：先用 Seedream 5.0 / Nano Pro / MJ 定死產品 hero 圖 → i2v 只動畫化。**這是產品廣告最可靠路徑**，但要校準期待 ↓。
+
+> **⚠️ 實測校準（2026-06-05 OiiOii Seedance i2v）：i2v 鎖形狀 ≠ 完美凍結。**
+> 用 Seedream 5.0 hero（精華液瓶）→ Seedance 2.0 pro i2v 實測：**構圖 / 材質 / 打光 / 配色 / 主體類型忠實沿用**，但**瓶身比例仍中度漂移**（影片版較寬、液位變、自己長出水珠）。
+> 結論：i2v 把「這是什麼 + 什麼質感」鎖得很好，但「精確輪廓比例」在 Seedance 仍有重繪空間。
+> **要更嚴格的形狀凍結：** (a) hero 圖背景極簡乾淨（少干擾）；(b) i2v prompt 明寫 `產品 rigid 形狀不變`；(c) 改用 **Kling 3.0 Start Frame**（首幀鎖定比 Seedance i2v 更硬）+ Motion Brush 只刷背景/光，產品本體不刷 = 幾乎不動；(d) 運鏡越小（subtle dolly > 大 orbit）漂移越少。
 
 ### 修法（negative 側，支援的模型）
 ```

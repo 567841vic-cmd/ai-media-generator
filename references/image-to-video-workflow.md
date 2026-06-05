@@ -428,7 +428,7 @@ Magazine-spread layout, paper texture, subtle drop shadows between tiles.
 
 ### 與 quality-control 連動
 
-i2v 鎖形狀是 [quality-control.md §1 主體完整性](quality-control.md) 的核心：產品 t2v 三次還變形 → 切此 i2v 流程，hero 圖把輪廓 100% 定死，i2v 只負責動 = 變形機率驟降。**產品廣告最可靠路徑。**
+i2v 鎖形狀是 [quality-control.md §1 主體完整性](quality-control.md) 的核心：產品 t2v 三次還變形 → 切此 i2v 流程。**但實測校準（2026-06-05）：Seedance i2v 鎖形狀 ≠ 完美凍結** —— 構圖/材質/打光忠實沿用，瓶身比例仍中度漂移。要更硬的形狀凍結改用 **Kling 3.0 Start Frame + Motion Brush**（產品本體不刷）。完整校準見 quality-control.md §1 的 ⚠️ 區塊。**i2v 仍是產品廣告最可靠路徑，只是別期待像素級凍結。**
 
 ### 2. canvas 上的 frame 可被 drag-move（會破壞 layout）
 
