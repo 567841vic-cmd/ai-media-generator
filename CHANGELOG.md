@@ -2,6 +2,66 @@
 
 All notable changes to this skill are documented here.
 
+## [1.5.0] - 2026-06-05 — 全平台知識升級 + Sora 停運 + 反瑕疵品質層
+
+Major knowledge refresh. The OiiOii automation profile got 10× deeper across v1.4.x, but the other 9 platform references lagged behind. This release brings every platform up to 2026-06 current state, propagates a major industry event (Sora shutdown), and adds a systematic anti-flaw quality-control layer.
+
+### Method: parallel research subagents + adversarial verification
+
+Dispatched 8 research subagents (one per platform), each instructed to WebSearch the latest model version + advanced features, then augment (not replace) the reference file. Every high-risk recency claim was then **independently re-verified** by the main agent via its own WebSearch before acceptance:
+
+| Claim | Verified? | Source |
+|---|---|---|
+| Sora 2 shutdown (app 2026-04-26, API 2026-09-24) | ✅ TRUE | OpenAI Help Center + CNN + the-decoder + Futurum |
+| Runway Gen-4.5 (#1 Video Arena, 1247 Elo) | ✅ TRUE | runwayml.com + CNBC + aibusiness |
+| Midjourney V8.1 (2026-04-30, native 2K HD) | ✅ TRUE | docs.midjourney.com + updates.midjourney.com |
+
+Subagents also self-corrected several stale facts (Vidu Q3 release date, rank #2 not #1; Seedance speed multipliers; Suno Personas→Voices rename).
+
+### 🔴 Critical: OpenAI Sora 2 discontinued
+
+OpenAI announced (2026-03-24) a two-stage Sora shutdown: app/web closed 2026-04-26, API closes 2026-09-24, then all user data is permanently deleted. The skill now:
+- Marks Sora as retired in SKILL.md description, README, negative-bank, community-prompt-patterns
+- Adds a 🔴 banner to `automation/site-profiles/sora.md` (don't waste automation calls opening a dead UI)
+- Preserves Sora's prompt knowledge (format anchors, bodycam) for API users until 2026-09-24 + historical value
+- Redirects new tasks to Runway Gen-4.5 / Veo 3.1 / Kling 3.0
+
+### Platform references upgraded (8 files, +~700 lines net)
+
+| File | Before | After | Highlights |
+|---|---|---|---|
+| kling.md | 240 | 405 | Kling 3.0/O-series, Motion Brush, Elements, Lip Sync, Camera Control, pricing |
+| sora.md | 237 | 360 | Sora 2 shutdown banner, Cameo/Remix/Storyboard knowledge for API window |
+| runway.md | 226 | 317 | Gen-4.5 flagship, References/Act-Two/Aleph deep-dive |
+| midjourney.md | 254 | 398 | V8.1/V8/niji 7/V1 Video, --oref V7-only warning, moodboards |
+| vidu.md | 247 | 209 | Q3 (rank #2 after Sora 2), multi-ref, anime optimization (de-bloated) |
+| seedream.md | 251 | 296 | Seedream 5.0 Lite (CoT + web search), ≤14 refs, visual-cue editing |
+| ideogram.md | 101 | 246 | 3.0 text rendering (90% accuracy), Magic Prompt timing, style codes |
+| suno.md | 388 | 509 | v5.5, Voices (ex-Personas), Custom Models, Suno Studio DAW, 12-track stems |
+
+### 🔧 NEW: references/quality-control.md — 反瑕疵 playbook
+
+Direct answer to "結果還是有很多瑕疵". A systematic anti-flaw playbook that classifies 7 flaw categories and gives targeted fixes (rather than blindly re-rolling prompts):
+1. **主體完整性** — product deformation (the #1 ad killer); fix via rigid-form locks + i2v
+2. **時間穩定** — flicker/jitter/texture-boiling
+3. **物理可信度** — fluid/cloth/smoke realism by material (lookup table)
+4. **文字渲染** — garbled logos/text; fix via image-stage text + `no text` in video
+5. **質感分級** — the "plastic/AI/cheap look"; the single-soft-light + shallow-DOF + clean-bg formula
+6. **運鏡控制** + 7. **構圖**
+- Includes a platform physics/stability strength table and a "what to change first" iteration strategy.
+
+### Other updates
+
+- `SKILL.md` — description version bumps, Sora warning, quality-control wired into Step 2 + the pre-delivery quality checklist + a 2026-06 "重大變動" block in 版本資訊
+- `templates/negative-bank.md` — version table refresh, new "產品廣告(影片)" anti-deformation section (was a thin 1-liner)
+- `README.md` + `references/community-prompt-patterns.md` — version strings + Sora retirement propagated
+
+### Why this matters
+
+The skill's value is "know the current right way for each platform." Stale version strings (v7 when V8.1 ships, recommending a dead Sora) actively mislead. This release re-grounds the whole platform layer in verified 2026-06 reality and adds the missing "my output has flaws, now what" muscle.
+
+---
+
 ## [1.4.7] - 2026-05-28 — "Promise was collected" ≠ failure + parallel VFX validation
 
 ### Finding

@@ -6,11 +6,11 @@
 
 說「做個古代將軍騎馬衝鋒的電影感短片」就好。Claude 會：
 
-1. **挑對平台** —— Seedance 寫實武打？Veo 3.1 要原生音效？Sora 2 要 bodycam 風格？這個 skill 知道
+1. **挑對平台** —— Seedance 寫實武打？Veo 3.1 要原生音效？Kling 3.0 / Runway Gen-4.5 要寫實運鏡？這個 skill 知道（Sora 2 🔴 已停運，見下）
 2. **寫對提示詞** —— 不是 `cinematic, 8k, beautiful` 這種沒用的詞，而是 Deakins、Lubezki、Kodak Vision3 500T、teal-orange grade、Constraints tail（不抖動、不變形…）這類「平台真正吃」的 token
 3. **直接操作網站** —— 透過瀏覽器 MCP 把提示詞送上 OiiOii / Flow / Kling / Suno，按完所有按鈕，把成品 fetch 回來
 
-涵蓋 14+ 平台：Midjourney v7、Flux 1.1 Pro、Sora 2、Veo 3.1、Kling 3.0、Seedance 2.0 pro、Suno v5、Runway Gen-4、Ideogram 3、Seedream、Nano Banana Pro、Vidu Q3、Stable Diffusion、OiiOii…
+涵蓋 14+ 平台：Midjourney V8.1、Flux 1.1 Pro、Sora 2（🔴 已停運）、Veo 3.1、Kling 3.0、Seedance 2.0 pro、Suno v5.5、Runway Gen-4.5、Ideogram 3、Seedream 5.0、Nano Banana Pro、Vidu Q3、Stable Diffusion、OiiOii…
 
 ---
 
@@ -46,10 +46,10 @@ cinematic shot of an ancient general on a horse, 8k, beautiful, masterpiece, det
 
 Generative-AI prompts are **not portable**. The same idea sent to Flux vs Midjourney vs Seedance produces wildly different quality, because each model was trained on different captioning conventions:
 
-- **Midjourney v7** loves comma-chunked detail + `--style raw --stylize 750`
+- **Midjourney V8.1** loves comma-chunked detail + `--style raw --stylize 750`
 - **Flux** strips out director names but rewards 80-200 word natural paragraphs with technical photography vocabulary
 - **Seedance 2.0** uses **bracketed labels** (`[Style] [Scene] [Character] [Shot 1: 00:00-00:05]`), eats lens focal lengths + format anchors (`Sony A7S3`, `IMAX Fantasy Camera`, `Unreal Engine 5`), supports native 4-modal audio (`Sound design:`) and bilingual lip-synced dialogue. Chinese preferred for 武打 / 古裝 / romance / MV.
-- **Sora 2** wants "format anchors" (`bodycam footage`, `surveillance`) and quoted dialogue
+- **Sora 2** wants "format anchors" (`bodycam footage`, `surveillance`) and quoted dialogue — 🔴 app/web 已於 2026-04-26 停運（API 撐到 2026-09-24），新任務改用 Runway Gen-4.5 / Veo 3.1 / Kling 3.0
 - **Veo 3.1** is the only model where SFX / Ambient tags actually generate audio
 
 This skill captures those signatures — both from official cookbooks (OpenAI, Google Cloud, fal.ai, BFL) and from real-world community posts on X / Threads / Reddit / 小紅書 / Bilibili — into a single reference Claude can load on demand.
@@ -86,7 +86,7 @@ ai-media-generator/
         ├── oiioii.md                  # ✅ Phase 1-3E + Seedance §12.9 deep playbook
         ├── flow.md                    # ✅ Veo 3.1 complete
         ├── kling.md                   # ✅ Kling 3.0 complete
-        ├── suno.md                    # ✅ Suno v5 complete
+        ├── suno.md                    # ✅ Suno v5.5 complete
         └── (stubs for midjourney/seedream/runway/sora/vidu/ideogram)
 ```
 
@@ -146,9 +146,10 @@ Claude Code auto-discovers `SKILL.md` files inside skills directories.
 | OiiOii.ai | ✅ Verified | Phase 1-3E + Seedance 2.0 pro deep playbook |
 | Google Flow (Veo 3.1) | ✅ Verified | Fast / Quality / Lite modes mapped |
 | Kling 3.0 | ✅ Verified | + Fast-Track + Native Audio |
-| Suno v5 | ✅ Verified | 5-song chain SOP |
-| Midjourney v7 | 📝 Stub | Reference only |
-| Seedream / Runway / Sora 2 / Vidu / Ideogram | 📝 Stub | Prompt guides complete; site profiles pending |
+| Suno v5.5 | ✅ Verified | 5-song chain SOP |
+| Midjourney V8.1 | 📝 Stub | Reference only |
+| Seedream 5.0 / Runway Gen-4.5 / Vidu Q3 / Ideogram 3 | 📝 Stub | Prompt guides complete; site profiles pending |
+| ~~Sora 2~~ | 🔴 停運 | app/web 2026-04-26 已關，API 撐到 2026-09-24；新任務改用 Runway Gen-4.5 / Veo 3.1 / Kling 3.0 |
 
 Prompt-craft reference files exist for all 14+ platforms regardless of automation status.
 
@@ -158,7 +159,7 @@ This skill was built iteratively against real-world tasks (storyboarding, music-
 
 The community-prompt-patterns.md file consolidates research across:
 
-- Official cookbooks: OpenAI Sora 2, Google Cloud Veo 3.1, Runway Gen-4 / Aleph, fal.ai (Kling, Wan, Seedream), BFL (Flux Kontext), Ideogram, Midjourney v7 docs, Google Nano Banana
+- Official cookbooks: OpenAI Sora 2 (🔴 已停運，歷史參考), Google Cloud Veo 3.1, Runway Gen-4.5 / Aleph, fal.ai (Kling, Wan, Seedream), BFL (Flux Kontext), Ideogram, Midjourney V8.1 docs, Google Nano Banana
 - Community posts: X / Threads / Reddit / 小紅書 / Bilibili
 - Practitioner write-ups: Atlas Cloud Seedance Library, awesome-seedance-2-prompts (GitHub), 知乎 / 腾讯新聞 / CSDN 即夢 Seedance 手册
 

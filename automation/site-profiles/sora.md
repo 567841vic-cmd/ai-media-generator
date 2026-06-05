@@ -1,9 +1,15 @@
 # Site Profile: Sora 2
 
-**URL:** `https://sora.com/` (或 `https://chat.openai.com/sora`)
-**驗證狀態:** ⏳ 未驗證 (stub — 操作時請邊做邊補)
+> 🔴 **平台已停運（2026-06）— 此 profile 僅供歷史參考，勿用於自動化。**
+> OpenAI 宣布退役 Sora：**Web/App 2026-04-26 關閉**、**API 2026-09-24 關閉**。
+> `sora.com` + iOS/Android App 已無法操作 → **不要嘗試導航/登入/click**。
+> 要用 Sora 只剩第三方代理 API（fal.ai / Replicate / Azure AI Foundry），時效到 2026-09-24。
+> 新專案請改用現役模型。完整說明見 `references/sora.md` §平台狀態警告。
+
+**URL:** `https://sora.com/` (或 `https://chat.openai.com/sora`) — ⛔ 已關閉
+**驗證狀態:** 🔴 平台停運，stub 不再續補
 **平台類型:** 生影片 (OpenAI 文生影片)
-**Stack:** OpenAI 自建 React，需 ChatGPT Plus / Pro 訂閱
+**Stack:** OpenAI 自建 React，曾需 ChatGPT Plus / Pro 訂閱
 
 ---
 
