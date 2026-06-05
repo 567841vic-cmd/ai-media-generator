@@ -2,6 +2,42 @@
 
 All notable changes to this skill are documented here.
 
+## [1.6.0] - 2026-06-05 — 模型精通 + Gemini Omni + 概念先行 prompting
+
+User feedback was blunt and correct: "your prompts have no theme, some shots are aimless, your video output is poor, and you're not familiar with the models — Vidu, Kling, Google Omni — go research them properly." Two real gaps exposed: (1) prompts were technically loaded but conceptually empty, (2) the skill missed an entire flagship model. This release fixes both.
+
+### 🎯 The miss: Gemini Omni (the user knew it, the skill didn't)
+
+The user named "Google Omni" — I didn't have it. Researched + **independently verified**: **Gemini Omni** is real — Google's any-to-any multimodal video model announced at I/O 2026 (2026-05-19), positioned as "Nano Banana for video", with conversational turn-by-turn editing. **Gemini Omni Flash is live in Google Flow** (which the user has PRO access to), 10s cap at launch.
+
+Verified via blog.google + deepmind.google + TechCrunch + CNBC + VentureBeat. Google video is now a **dual flagship**: Veo 3.1 (4K quality line) + Gemini Omni (conversational edit line) — they coexist, not replace. ⚠️ Naming landmine baked: Gemini Omni (Google) ≠ Kling 3.0 Omni (Kuaishou) — same name, different companies. Gemini Omni's reference-locked conversational editing natively solves the exact OiiOii pain ("加入對話 ≠ i2v reference") that cost two prior sessions.
+
+### 🎬 NEW references/concept-first-prompting.md — the craft fix
+
+Direct answer to "prompts have no theme / shots are aimless / output is poor." Diagnosis: stacking technical tokens (subsurface scattering, caustics, volumetric) makes pretty-but-empty shots with no idea. Method: (1) one-line **concept** — specific enough to be a film title, not "show it's premium"; (2) **3-beat arc** (setup→turn→payoff) even in 10s; (3) **existence test** per shot ("what does this shot say? delete it — does the story still stand?" — this is what fixes aimless shots); (4) only then add technical tokens, only ones serving the concept. Includes a before/after rewrite of this skill's own empty serum prompt into a concept-driven one ("一滴的奢侈"), 6 product-ad concept frameworks, and a flaw→concept-root-cause table.
+
+### 🧭 NEW references/model-picker.md — model mastery
+
+Researched every OiiOii model + the big platforms via 4 parallel source-cited research subagents (uncertain platform-specifics flagged 待驗證). One card per model: vendor / best-at / signature prompt technique / when-to-pick + a 30-second decision tree + naming-confusion table. Signature techniques that were missing: Seedance 2.0 (`@AssetName` role-assignment), Vidu Q3 (`@tag` priority-order + HEX color-lock + audio-as-script), Hailuo 2.3 ("director's AI", write only what changes), Wan 2.7 (Thinking Mode), Kling 3.0 (event-not-state physics, action-with-resolution to prevent hang), Gemini Omni (one-change-per-turn), Nano Banana Pro (no tag-soup, quote target text), NovelAI (Danbooru tag names). Clarified the Kling O-series: V3 (quality) vs Omni/O3 (reference-driven, video-input) vs O1 (unified gen+edit, first-to-last frame) — three different models.
+
+### Other
+
+- `references/veo.md` — Google dual-flagship section (Veo 3.1 + Gemini Omni)
+- `SKILL.md` — wired both new references into routing with strong triggers, added Gemini Omni + Hailuo/Wan/HappyHorse to the video list + version block
+- `memory/reference_platform_status_2026_06.md` (dev-only) — Gemini Omni + per-model signature-technique table
+
+### Why this matters
+
+"Not familiar with the models" + "prompts have no theme" are what separate a prompt generator from someone who makes good ads. v1.5.x made the skill able to operate the tools; v1.6.0 makes it know which tool and how to give the work an idea worth watching.
+
+---
+
+## [1.5.2] - 2026-06-05 — i2v 鎖形狀實測校準（誠實版）
+
+Live i2v run produced a playable video; honest calibration that v1.5.1 overclaimed. OiiOii Seedance i2v faithfully carries composition/material/lighting/color from the hero image, but bottle **proportions still drifted moderately** (not pixel-level freeze). For stricter freeze: ultra-clean hero background, explicit rigid-form constraint, smaller camera moves, or Kling 3.0 Start Frame + Motion Brush (brush background not product). Corrected in quality-control.md §1, preset #31, image-to-video-workflow.md. i2v is still the most reliable product path — just not a pixel freeze on Seedance.
+
+---
+
 ## [1.5.1] - 2026-06-05 — 🎯 真正的 i2v 觸發法驗證（懸案落幕）+ 鎖形狀實證
 
 The single biggest open question in the OiiOii automation profile — "how do you ACTUALLY trigger image-to-video?" — is finally resolved with a live verified run. Two earlier sessions (2026-05-19) baked wrong answers and got user-reported failures ("the shoe is completely different"). This release closes it for good and validates the quality-control shape-lock hypothesis end-to-end.
