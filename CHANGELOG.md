@@ -2,6 +2,51 @@
 
 All notable changes to this skill are documented here.
 
+## [1.5.1] - 2026-06-05 — 🎯 真正的 i2v 觸發法驗證（懸案落幕）+ 鎖形狀實證
+
+The single biggest open question in the OiiOii automation profile — "how do you ACTUALLY trigger image-to-video?" — is finally resolved with a live verified run. Two earlier sessions (2026-05-19) baked wrong answers and got user-reported failures ("the shoe is completely different"). This release closes it for good and validates the quality-control shape-lock hypothesis end-to-end.
+
+### 🎯 The true i2v trigger (verified 2026-06-05)
+
+**Right-click the canvas image → 「生成影片」 → a canvas-side i2v box appears with the image already attached as reference and Seedance 2.0 pro auto-selected.**
+
+The two prior failures both injected into the **left panel** (the agent chat = t2v path), which is why the product kept coming out different. The real i2v input is a **separate canvas-side box** (contenteditable at x>700, vs left panel at x~120). Full DOM automation sequence baked into `oiioii.md §12.10.10`.
+
+Why it was hard: 「加入對話」 (which a prior version swore was the answer) only adds the image to the agent's chat history — the art director sees it and writes a text prompt, but the image file never reaches Seedance's i2v endpoint. 「生成影片」 is the one that actually attaches the image as a reference frame.
+
+Live validation: Seedream 5.0 hero shot (serum bottle, shape-lock prompt) → right-click → 生成影片 → injected the i2v golden formula (motion-only) into the canvas box → 「影片生成中... 預估 287s」 with the image attached. The shape-lock path from quality-control.md §1 now has a verified execution route.
+
+### context menu full options (re-mapped)
+
+`替換 / 生成影片(✅ true i2v) / 生成圖片 / 标记识别 / 存為角色 / 存為場景 / 存為風格 / 加入對話(❌ agent-chat only) / 複製 / 下載 / 刪除` — newly found: 替換, 标记识别, 存為角色/場景/風格 (save to asset library).
+
+### OiiOii model lineup change (verified)
+
+GPT-Image2 is gone. Current image models: **Oii Nano Pro (Best) / Oii Nano 2 / Seedream 5.0 / Seedream 4.5 / MJ niji7 / niji6 / NovelAI / Gpt 4o**. Video adds Kling 3.0 Pro/Omni/O1, Hailuo 2.3, Wan 2.7, Vidu Q3. (Sora 2 still listed in OiiOii's dropdown — likely proxied via the API window that closes 2026-09-24.) Hero-shot SOP updated from "GPT-Image2" to "Seedream 5.0 / Nano Pro".
+
+### 🏆 NEW presets (#31, #32) — 反瑕疵實戰
+
+- **#31 產品 Hero i2v（鎖形狀）** — the verified two-stage flow (lock shape in a hero image → i2v animate motion-only), the most reliable path for any physical product ad
+- **#32 物理材質速查 Inject** — per-material physics token table (water / glass / metal / cloth / smoke / food) to fix "moves like jelly"
+
+### Platform recon (logged-in confirmation, no credits burned)
+
+Kling confirmed still logged in at `kling.ai/app/` — feature set now Omni / Image / Video / Motion Control / Canvas / **Agent / Avatar 2.0** (last two new). Site-profile verification date refreshed; noted that Kling's feature labels are icon-only (DOM text scrape misses them — needs screenshot+coords for deep mapping).
+
+### Files changed
+
+- `automation/site-profiles/oiioii.md` — §12.10.4 flipped ⛔→✅, §12.10.5 SOP updated, NEW §12.10.10 (full verified i2v DOM sequence + re-mapped context menu)
+- `references/image-to-video-workflow.md` — replaced the "both methods broken / 待驗證" section with the verified resolution
+- `automation/site-profiles/kling.md` — 2026-06-05 recon confirmation
+- `templates/preset-packs.md` — presets #31, #32
+- `memory/feedback_i2v_prompt_rule.md` (dev-only) — i2v trigger marked verified
+
+### Why this matters
+
+The i2v shape-lock is the answer to "my product ad has flaws" for any physical product: lock the form in a hero image, then i2v only animates motion — the model has no freedom to re-imagine the shape. Until today the skill couldn't reliably DO it on OiiOii. Now it can, with a verified click path.
+
+---
+
 ## [1.5.0] - 2026-06-05 — 全平台知識升級 + Sora 停運 + 反瑕疵品質層
 
 Major knowledge refresh. The OiiOii automation profile got 10× deeper across v1.4.x, but the other 9 platform references lagged behind. This release brings every platform up to 2026-06 current state, propagates a major industry event (Sora shutdown), and adds a systematic anti-flaw quality-control layer.

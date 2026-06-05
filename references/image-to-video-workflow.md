@@ -389,60 +389,46 @@ Magazine-spread layout, paper texture, subtle drop shadows between tiles.
 
 ---
 
-## 🆕 OiiOii 自由畫布 i2v 探索進度（2026-05-19，兩次失敗）
+## ✅ OiiOii 自由畫布 i2v — 正解已驗證（2026-06-05）
 
-### ⛔ 兩個流程都實測 broken — 真正 i2v 操作仍待驗證
+經歷 2026-05-19 兩次打臉（共燒 ~420 STAR），2026-06-05 用 Seedream 5.0 hero + 精華液廣告**完整驗證真正的 i2v 流程**。
 
-| 版本 | 我寫的「正解」 | 實測結果 |
-|---|---|---|
-| **v1.4.0** | prompt 內提「資產 N」讓 agent 自動關聯 | ❌ 鞋子造型歪、走 t2v 路徑 |
-| **v1.4.1** | 右鍵圖 → **加入對話** | ❌ 「鞋子完全不同」（用戶 2026-05-19 報告）|
+### 🎯 正解：右鍵 canvas 圖 →「生成影片」→ canvas-side i2v 框
 
-兩次都把「以為」當「正解」寫進 skill，兩次都被打臉。共燒 ~420 STAR ≈ NT$100。
-
-### 🔍 失敗原因推測
-
-**「加入對話」可能只是把圖加進 LLM agent 的 chat history**（讓藝術總監知道你想做球鞋廣告），**沒真的把圖檔注入 Seedance 的 i2v API endpoint**。
-
-藝術總監看到圖 → 理解 user intent → 寫 prompt 給 Seedance → 但 Seedance 收到的仍是純文字 → 走 t2v 生成 → 鞋子當然不一樣。
-
-### 🎯 待驗證的真正 i2v 觸發點
-
-回看 canvas 右鍵 context menu 7 個選項：
-
-| 選項 | 推測用途 | 驗證狀態 |
-|---|---|---|
-| **✏️ 生成影片** | **真正的 i2v 直接觸發**（最大嫌疑）| ⏳ 未測 |
-| 🖼 生成圖片 | i2i 模式 | ⏳ 未測 |
-| 反推提示詞（4 STAR）| Image → prompt 反推 | ⏳ 未測 |
-| 💬 加入對話 | 只丟給 agent 看，**不鎖 i2v** | ❌ 已測，broken |
-| 複製 (Ctrl+C) | 標準 | — |
-| 下載 | 標準 | — |
-| 刪除 | 標準 | — |
-
-**下次嘗試：先試「✏️ 生成影片」option** — 應該會直接開 i2v 工具列，設參數後送。預期它會真正把圖檔當起始幀。
-
-### 待驗證的其他可能機制（如果「生成影片」也失敗）
-
-1. **拖拉圖到 prompt input** — 之前 drag 是 pan canvas，但可能還有其他 drop zone
-2. **+ 按鈕 → 選擇圖片** + 從本地上傳 — 強制走 file upload 路徑，可能才能真 attach
-3. **點圖選中 → 出現 floating action bar** — 還沒探索過
-4. **canvas 上 frame 的「+ 替換」icon** — 可能是替換 ref slot 而非當前圖
-5. **不切換到 Seedance 2.0 pro，保留 智能模型** — 讓 agent 自己決定 i2v
-6. **canvas 上拉一條線從圖到 prompt area** — node-graph 風格的關聯（OiiOii canvas 是 tldraw 風）
-
-### 📌 教訓（baked 進 memory）
-
-寫進 `feedback_verify_before_documenting.md`：**未實測完整 UI options 不要把「以為」寫成 SOP**。每個 context menu / 按鈕 / 操作要實際走一遍，看 model 真實輸出，才能寫進 skill。否則就是「自吹自擂式 v1.x.0 → 打臉 → v1.x.1 → 再打臉」的循環。
-
-### 暫時 SOP（保守版，待真正 i2v 驗證後更新）
+**關鍵：「生成影片」不是送 prompt 給左 panel agent，而是在 canvas 上開一個獨立 i2v 框，圖自動 attach 成參考，且影片模型（Seedance 2.0 pro）自動選好。**
 
 ```
-1. 生 hero 圖（GPT-Image2 / Nano Banana 等）
-2. 確認生成滿意（如果不滿意先 redo image，再考慮 i2v）
-3. 🚧 i2v 觸發方式待驗證：右鍵 → 「生成影片」是最有可能的真正觸發點
-4. 不要再相信「加入對話」這個選項作為 i2v 機制
+1. 生 hero 圖（Seedream 5.0 / Nano Pro；⚠️ GPT-Image2 已下架→Gpt 4o），prompt 含「形狀完整無變形」鎖
+2. 右鍵 canvas 上的 hero 圖 → 選「生成影片」（context menu 第 2 項）
+3. canvas 右側彈出 i2v 框：圖已 attach（左上縮圖）+ Seedance 2.0 pro 自動選 + 16:9·10s·720p 設定就緒
+4. 在「canvas i2v 框」注入運鏡 prompt（i2v 黃金公式，運鏡 only）— ⚠️ 是 canvas 框（x>700）不是左 panel（x~120）
+5. 點 canvas 框的 send button（class `_send-section_`）
+6. 「影片生成中... 處理中 · 預估 ~287s」= 成功，圖真的當參考
 ```
+
+完整 DOM 自動化序列見 [oiioii.md §12.10.10](../automation/site-profiles/oiioii.md)。
+
+### 為什麼之前兩次打臉
+
+| 操作 | 實際行為 | i2v? |
+|---|---|---|
+| prompt 內提「資產 N」 | 文字提及，圖沒注入 | ❌ t2v |
+| 右鍵 → **加入對話** | 圖只進左 panel agent chat，agent 看圖寫文字 prompt 給 Seedance | ❌ t2v（鞋子/產品變不同）|
+| 右鍵 → **生成影片** | canvas 開 i2v 框，圖 attach 成真參考 + 影片模型自動選 | ✅ **真 i2v** |
+
+根因：之前一直注入**左 panel**（t2v 路徑）。真 i2v 要走 **canvas 框**。
+
+### context menu 完整選項（2026-06-05 實測）
+
+`替換` / **`生成影片`**(✅ 真 i2v) / `生成圖片`(i2i) / `标记识别` / `存為角色` / `存為場景` / `存為風格` / `加入對話`(❌ 只進 agent chat) / `複製` / `下載` / `刪除`
+
+### 📌 正面教訓
+
+這是 `feedback_verify_before_documenting.md` 的**正面案例**：§12.10.4 早就推測「右鍵→生成影片」最可能是正解，但沒寫成 SOP，標「待驗證」。直到 2026-06-05 實測通過才升級成「已驗證」。**先標待驗證、實測後才寫死 = 對的紀律。**
+
+### 與 quality-control 連動
+
+i2v 鎖形狀是 [quality-control.md §1 主體完整性](quality-control.md) 的核心：產品 t2v 三次還變形 → 切此 i2v 流程，hero 圖把輪廓 100% 定死，i2v 只負責動 = 變形機率驟降。**產品廣告最可靠路徑。**
 
 ### 2. canvas 上的 frame 可被 drag-move（會破壞 layout）
 
