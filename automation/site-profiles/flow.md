@@ -64,6 +64,10 @@
 - x2 變體中通常至少一支文字到位 → 多生幾版挑。
 - 仍不放心 → 走 image-logo（Ideogram/Nano Banana 做對招牌）→ Ingredients/Frames 帶入。但 Omni 一鏡直出短店名已可用。
 
+### ⚠️ x2 可能 1 支成功 1 支被政策擋（2026-06-08 實測）
+
+Omni Flash x2 變體中可能 **1 支正常、1 支跳「失敗：此生成內容可能違反政策」**（遊樂園 prompt 實測，疑似「delighted screams」「screams」等詞觸發）。應對：① 另一支通常 OK 直接用；② 失敗格有 retry/undo/delete 鍵；③ 想兩支都穩 → 移除可能踩線的詞（screams/violence/血腥/裸露/恐懼類）。**安全詞替代**：`delighted screams` → `cheerful laughter`、`excited cheering`。
+
 ### Flow 社群 prompt 技巧（X/Reddit/YouTube/官方彙整）
 1. **Camera-first**：每個 prompt **開頭先寫鏡頭**（連「static, locked off」也要寫）—— 鏡頭定整支視覺文法。
 2. **五要素 + 50-60 字**：Subject&Action / Composition&Camera / Environment&Mood（寫畫面感不只寫地點）/ Visual Style（具體如 stop motion）/ Audio。
