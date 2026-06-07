@@ -56,6 +56,14 @@
 | AI Ultra 高 | $200 | 25,000 | ✅ 全含 |
 - 原生 720p；1080p 升頻 Free/Pro 免費；4K 升頻約 50cr (待驗證)。Omni Flash 各時長 credit (15/20/25/30、edit 40) 為第三方數字**待 Flow 介面確認**。
 
+### ✅ Omni Flash 文字渲染：短品牌名「可」渲染（2026-06-08 實測）
+
+一般影片模型對文字 = 鬼畫符（見 quality-control §4），**但 Omni Flash 是例外**：用**引號標注 + 指定載體**（招牌/燈籠）成功渲染出店名「**Hao0321**」清楚可讀（毛筆字風格木招牌）。
+- 寫法：`a glowing wooden sign clearly reads "Hao0321"`（引號 + 明確載體）
+- 適用：**短英數品牌名/店名**（~7 字內）。長句、段落文字仍不可靠。
+- x2 變體中通常至少一支文字到位 → 多生幾版挑。
+- 仍不放心 → 走 image-logo（Ideogram/Nano Banana 做對招牌）→ Ingredients/Frames 帶入。但 Omni 一鏡直出短店名已可用。
+
 ### Flow 社群 prompt 技巧（X/Reddit/YouTube/官方彙整）
 1. **Camera-first**：每個 prompt **開頭先寫鏡頭**（連「static, locked off」也要寫）—— 鏡頭定整支視覺文法。
 2. **五要素 + 50-60 字**：Subject&Action / Composition&Camera / Environment&Mood（寫畫面感不只寫地點）/ Visual Style（具體如 stop motion）/ Audio。
