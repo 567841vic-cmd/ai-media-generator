@@ -2,6 +2,31 @@
 
 All notable changes to this skill are documented here.
 
+## [1.6.2] - 2026-06-08 — Flow 實機操作驗證（Omni Flash 跑通 + concept-first 落地）
+
+After the user logged into Flow, ran the full pipeline live via browser automation and converted the v1.6.1 research-based Flow profile from "待驗證" to verified.
+
+### Live-verified (Flow PRO, real Omni Flash run)
+
+End-to-end automation worked: new project → settings (Omni Flash / 16:9 / 10s / x2) → inject a concept-first prompt → send → 2 video variants generated. Confirmed on-screen:
+- **Omni Flash 16:9 10s x2 = 30 credits** (the v1.6.1 third-party 待驗證 number, now confirmed in the in-app credit display; note a "50% fewer credits" Omni Flash promo was running ~6/8).
+- Settings panel layout: 圖片/視頻 tab, 幀/素材 sub-modes, 9:16/16:9, x1–x4, model dropdown (Omni Flash default), 4/6/8/10s, live credit readout.
+
+### 🔑 Key automation finding: Flow Slate needs real click-focus first
+
+OiiOii's Slate accepts `div.focus()` + `beforeinput` directly. **Flow's Slate does not** — direct beforeinput leaves domLen unchanged. Must `computer.left_click` the box center for a real pointer focus **first**, then beforeinput insertFromPaste (then domLen jumped to 633 ✓). Baked into `flow.md` and `memory/feedback_contenteditable_react_dispatch.md` as the general-safe rule: click-focus before injecting; OiiOii can skip it, Flow must do it. Send button is a styled-components hashed class (`sc-xxx`) — locate by position + `aria-disabled=false`, not class.
+
+### concept-first applied live
+
+Ran the "一滴的奢侈" (the luxury of a single drop) concept from `concept-first-prompting.md` — camera-first, single-hero-element, audio-as-sound-designer. The generated opening beat renders the concept's intended hero (a single glowing golden droplet suspended in black void with warm rim light) as a focused, intentional shot rather than the scattered technical-token shots of earlier sessions. (Quality judgment left to the user per the no-self-rating rule.)
+
+### Files changed
+
+- `automation/site-profiles/flow.md` — §0 gets a "Live 實機驗證 2026-06-08" subsection (verified SOP, the click-focus-first gotcha, OiiOii-vs-Flow injection diff table, login note)
+- `memory/feedback_contenteditable_react_dispatch.md` (dev-only) — 踩坑 4.5: some Slate editors need real click-focus before beforeinput
+
+---
+
 ## [1.6.1] - 2026-06-08 — Google Flow 2026 大改版完整訓練
 
 User: "go online and keep strengthening, operate the platforms especially Flow — it had a major revamp — train extensively, learn Flow usage from X / IG / Threads / Reddit." Researched Flow's 2026 overhaul across official + community sources (1 dedicated research subagent + inline WebSearch) and baked a comprehensive revamp map into the Flow site-profile.

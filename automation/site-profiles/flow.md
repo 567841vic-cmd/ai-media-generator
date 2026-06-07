@@ -65,6 +65,37 @@
 6. **多輪 surgical 編輯**：每次編輯帶 **preserve 指令** 保留其他部分，把每次生成當草稿逐步改（Omni 原生支援）。
 7. ⚠️ **t2v 要寫足視覺細節**（與 OiiOii i2v「不重述視覺」相反 —— 平台差異，分開記！Frames/Ingredients 模式才回到「視覺交給參考圖、prompt 重心運鏡」）。
 
+### ✅ Live 實機驗證（2026-06-08，Hao Flow PRO 登入後實跑 Omni Flash）
+
+**全程自動化跑通：新建專案 → 設定 Omni Flash → 注入 concept-first prompt → 送出 → x2 影片生成。** 實測 SOP：
+
+```
+1. 首頁 click「+ 新建項目」(~783,605) → URL 變 /project/{uuid}
+2. 底部 prompt 框右側 click「視頻·10s·x2」設定 chip → 彈出設定面板：
+   - 圖片/視頻 tab、幀/素材 子模式、9:16 / 16:9、x1-x4 輸出數
+   - model dropdown（**Omni Flash 預設已選**，10s 預設）、4/6/8/10s 時長
+   - 底部即時顯示「生成將消耗 N 個點數」
+3. ✅ **Omni Flash 16:9 10s x2 = 30 點數**（live 確認，原研究待驗證數字解除）
+   ⚠️ 此期間有「Omni Flash 半價 credits 限時優惠（~6/8）」，30 可能含折扣
+4. Esc 關設定面板
+5. ⚠️⚠️ **Flow prompt 框是 Slate，但必須先「真實 click 聚焦」再 beforeinput** —
+   直接 beforeinput（沒先 click）會失敗（domLen 不增）。這跟 OiiOii 不同！
+   → computer.left_click 框中央 → 再跑 beforeinput insertFromPaste → 驗 domLen
+6. send button：prompt 框右下，`aria-disabled="false"` 的 button（class 是 styled-components
+   亂碼 sc-xxx，用「box 右緣 + 框內 y 範圍 + not disabled」定位，別靠 class）
+7. 送出後 prompt 框清空 + canvas 出現 x2 影片佔位（shimmer loading）+ 左欄加「視頻」
+8. Omni Flash 10s 生成約 1-3 分鐘
+```
+
+**Flow Slate 注入關鍵差異（vs OiiOii）：**
+| | OiiOii | Flow |
+|---|---|---|
+| beforeinput 前需先 click 聚焦？ | 否（直接注入即可）| **是（必須先 computer.left_click 框）** |
+| send button 定位 | `_send-button_`/`_credit-cost_` | styled-components 亂碼 class → 用位置+aria-disabled |
+| 設定面板 | 底部 toolbar icon | prompt 框右側「視頻·10s·x2」chip |
+
+**登入：** Flow session 會過期，重進停在 `accounts.google.com` 帳號選擇 → 用戶親自完成（Claude 不代登入）。登入後 URL = `labs.google/fx/zh/tools/flow`，首頁有「+ 新建項目」+ Flow TV/Discord/IG/X 頂欄連結 + PRO badge。
+
 ---
 
 ## 1. 登入與會員
