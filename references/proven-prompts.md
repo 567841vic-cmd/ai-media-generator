@@ -183,6 +183,76 @@ Create a 6-second premium product video. Use the uploaded image as the main prod
 
 ---
 
+## 🎵 音樂 MV（Suno 生歌 + Veo/Omni/Kling 生畫面）
+
+**MV 製作鏈：** Suno 生歌（含 stems）→ 抓 BPM / 段落 → 每段視覺 prompt **把運鏡/打光/lip-sync 錨在節拍 hit 上**（別讓鏡頭漂）→ Scene Builder 接。Veo 3.1 最強（in-frame 演唱 + 原生對嘴）。
+
+**品牌 MV（Flow，敘事型）**
+```
+Create a 45-second brand music video showcasing teamwork, innovation, and growth. Use an upbeat electronic track with smooth transitions between modern office scenes, brainstorming shots, and client meetings. Bright natural lighting, energetic handheld camera, diverse team, optimistic and forward-looking tone.
+```
+*為何好：官方級敘事 MV 結構，指定曲風+轉場+情緒。｜來源 invideo.io/blog/ai-music-video-prompting-guide*
+
+**歌詞視覺隱喻（Veo，節拍同步技法）**
+```
+Cinematic performance music video, a singer in a rain-soaked neon alley lip-syncing to the track. On the heavy bass drop, high-speed physics-accurate shattering glass erupts around her in slow motion, shards catching neon light. Camera pushes in on the beat, lighting pulses with the rhythm. Moody, high-contrast, 35mm.
+```
+*為何好：把歌詞意象（shattered glass）綁在 bass drop + 鏡頭 push on the beat = MV 節拍同步核心技法。｜來源 resource.digen.ai / invideo*
+
+> **節拍同步咒語**：`camera pushes in on the beat`、`lighting pulses with the rhythm`、`cut on the snare`、`anchor motion to the bass drop`。
+
+---
+
+## 📱 9:16 直式短影音 / UGC（TikTok / Reels / Shorts）
+
+**UGC 黃金公式：** `創作者類型 + 產品 + 場景 + 前 2 秒 hook + demo 動作 + proof point + 運鏡 + 打光 + 旁白台詞 + 字卡 + CTA + 9:16`。**5 種 hook**：痛點 / 開箱 / 數據 / before-after / 好奇。總長 20-25s，前 3 秒定生死。
+
+**保養品 UGC（9:16，痛點 hook）**
+```
+A 9:16 vertical UGC-style video. A skincare creator in her 20s films herself in a bright bathroom with soft morning light, holding a vitamin C serum bottle, talking casually to the front camera. She says: "I wanted something simple for dull skin." She applies a few drops, the camera pushes in on her glowing skin. Authentic iPhone selfie look, slight handheld motion, natural skin texture, no ring-light eyes. Caption text space at the top third.
+```
+*為何好：痛點 hook + 真人對鏡 + demo + 真實 iPhone 質感（避網紅 ring light）= 高轉換 UGC 標竿。｜來源 ugcmaker.org*
+
+**攜帶果汁機 UGC（9:16，demo hook）**
+```
+Vertical 9:16 UGC video. A creator films on a kitchen counter with a portable blender, natural daylight. Hook (first 2s): "This is my fastest breakfast trick." She drops in fruit, milk, and ice, blends quickly, then pours a smoothie into a glass and takes a sip. Fast satisfying demo, handheld phone camera, authentic home setting, upbeat energy. Leave safe area top and bottom for captions and CTA.
+```
+*為何好：demo hook + 快節奏滿足感 + 留字卡安全區（直式構圖鐵則）。｜來源 ugcmaker.org / adxmagic*
+
+> **直式鐵則**：1080×1920、主體置中、上下留 caption/CTA 安全區、前 3 秒給 hook（痛點/開箱/數據/before-after/好奇 五選一）。
+
+---
+
+## 🏠 房產 / 看房
+
+**無剪接空拍式走位（單鏡，連續）**
+```
+A camera showing the front door entrance, then slowly moving inside into the living room. There should be no cuts in the video, the camera acts like a smooth drone gliding forward. The door opens, the camera maintains a level horizon. Bright natural daylight, modern interior, wide angle, real estate tour aesthetic.
+```
+*為何好：`no cuts + drone-like + maintains level` 是看房一鏡到底的關鍵約束。｜來源 invideo.io*
+
+**多鏡頭看房 tour（Veo/Seedance，黃金午後光）**
+```
+Cinematic real estate tour, modern apartment, golden afternoon light. Wide shot of the entryway, slow forward push into the living room, light spills across hardwood floors. Cut to a medium shot of the kitchen, slow drift right, natural light catches the marble countertop. Cut to a wide shot of the master bedroom through a doorway, slow push-in, golden light on white linens. Smooth, elegant, premium listing video.
+```
+*為何好：entryway→living→kitchen→bedroom 標準看房動線，每鏡 push/drift + 自然光鋪陳。｜來源 milehightitleguy.com*
+
+> **建案進度神器**：start frame=空地、end frame=完工建築 → Frames-to-Video 內插出「興建縮時」。
+
+---
+
+## 👗 時尚 / 電商（布料動態 + 360 展示）
+
+**模特 360 子彈時間（Kling，先生模特圖再 i2v）**
+```
+Full quick 360-degree bullet-time rotation around the woman wearing the dress. The camera performs a continuous orbit with smooth speed and strong parallax. The subject subtly rotates to face the lens during the motion, maintaining focus and dramatic depth. Studio lighting, clean background, fashion e-commerce aesthetic.
+```
+*為何好：360 子彈時間讓買家看遍服裝各角度 = 時尚電商核心；strong parallax + 主體回望增加高級感。｜來源 leonardo.ai / wearview.co*
+
+> **時尚鐵則**：服裝廣告「布料怎麼動」決定成敗 → 寫 `fabric flows naturally, natural drape and inertia, wind catches the hem`；先用 image 鎖模特+服裝再 i2v 保一致。
+
+---
+
 ## ⚙️ 跨模型語法速查
 
 | 模型 | 一致性鎖法 | 多鏡頭語法 | 對白/音 |

@@ -2,6 +2,18 @@
 
 All notable changes to this skill are documented here.
 
+## [1.7.2] - 2026-06-08 — Prompt 庫擴充：音樂MV / 9:16 UGC / 房產 / 時尚（34+）
+
+繼續挖（inline WebSearch，subagent 被 rate-limit 改自查）。proven-prompts.md 從 26 擴到 34+，新增 4 類：
+- 🎵 音樂 MV — 品牌敘事 MV、歌詞視覺隱喻+節拍同步咒語（camera pushes in on the beat / cut on the snare）
+- 📱 9:16 直式 UGC — UGC 黃金公式 + 5 種 hook + 保養品/果汁機 UGC 全文 + 直式安全區鐵則
+- 🏠 房產 — 無剪接空拍走位、多鏡看房 tour、start/end frame 建案縮時
+- 👗 時尚電商 — 模特 360 子彈時間、布料動態鐵則
+
+來源：invideo.io / resource.digen.ai / ugcmaker.org / milehightitleguy.com / leonardo.ai / wearview.co。
+
+---
+
 ## [1.7.1] - 2026-06-08 — NEW: 經驗證 Prompt 庫（26+ 逐字可貼）
 
 User: "keep strengthening, and find more and better prompts." Dispatched 3 parallel research subagents (Veo/Omni/Flow · Kling/Seedance/Vidu · ad/product/food/car) and curated the best into a new copy-paste prompt library.
