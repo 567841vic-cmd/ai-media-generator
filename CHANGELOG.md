@@ -2,6 +2,33 @@
 
 All notable changes to this skill are documented here.
 
+## [1.7.0] - 2026-06-08 — 里程碑：創意 craft + Flow 實機 + 模型精通（整段訓練整合）
+
+Milestone consolidating the v1.6.x arc — the skill went from "operates the tools" to "knows which tool, gives the work an idea, and runs it live on Flow." Also folds in v1.6.4/1.6.5 (which shipped as tags without changelog entries) and adds the capstone live showcase.
+
+### What this arc added (consolidated)
+
+- **Creative craft layer** — `references/concept-first-prompting.md`: fix for "no theme / aimless shots / poor output." One-line concept → 3-beat arc → per-shot existence test → only then technical tokens. **Corrected after a real failure**: concept ≠ abstracting the product (the droplet trap). Plus the hard rule in `memory/feedback_no_abstract_concrete_hero.md`: product/scene ads need a **real, recognizable, clearly-visible hero** — never abstract VFX; 4-question pre-send gate.
+- **Model mastery** — `references/model-picker.md`: every OiiOii model + the major platforms, one card each (vendor / best-at / signature prompt technique / when-to-pick), 30-second decision tree, naming-confusion table. Includes the model the skill had missed: **Google Gemini Omni** (I/O 2026, verified).
+- **Quality control** — `references/quality-control.md`: 7-category anti-flaw playbook (subject integrity / temporal / physics / text / texture / camera / composition) + the verified exception that Omni/Veo-class **can** render short quoted brand names.
+- **Flow 2026 + live operation** — `automation/site-profiles/flow.md`: full revamp map (three-tool merge, Gemini Omni Flash, Agent/Tools/Music/TV, pricing) **and** a live-verified automation SOP: JS focus sequence (`focusin` + `focus` + inner-node selection + `beforeinput insertFromPaste`) since screenshot-coordinate clicks don't line up (page CSS 1920×919 vs MCP screenshot 1568×705); send-button by position+aria-disabled; x2 may yield 1 ok + 1 policy-blocked (swap risky words); Omni Flash 10s x2 = 30 credits (in-app confirmed).
+- **OiiOii i2v resolved** (from v1.5.x, still standing): right-click image → 生成影片 → canvas-side i2v box, not the left agent panel.
+
+### Capstone: live showcase on Flow Omni Flash
+
+Drove Flow end-to-end via browser automation across five themes, each with the subject as a clear concrete hero (post-no-abstract-rule): cheeseburger, yakitori, a full **Hao0321 izakaya brand ad** (store name rendered legibly on the sign — beer + oden + skewers + wings + lanterns), an amusement park at magic hour, and a luxury hypercar commercial. Each applied concept-first + camera-first + the JS injection SOP + safe-word policy avoidance. (Quality judgment left to the user per the no-self-rating rule.)
+
+### Folded-in patch notes
+
+- **1.6.4** — verified Omni Flash renders short alphanumeric brand names ("Hao0321") via quoted text + explicit carrier; exception baked into quality-control §4.
+- **1.6.5** — Flow Omni x2 can return 1 success + 1 content-policy block; safe-word swaps baked into flow.md.
+
+### Net new files this arc
+
+`references/concept-first-prompting.md`, `references/model-picker.md`, `references/quality-control.md` (public); `memory/feedback_no_abstract_concrete_hero.md`, `memory/feedback_contenteditable_react_dispatch.md`, `memory/reference_platform_status_2026_06.md` (dev-only).
+
+---
+
 ## [1.6.3] - 2026-06-08 — 硬教訓：禁抽象，產品廣告要真實清楚的 hero + Flow JS 注入
 
 User verdict on the v1.6.2 "一滴的奢侈" Omni droplet ad: "honestly, terrible, change the product, it sucks." Correct, and a recurring pattern I kept missing.
