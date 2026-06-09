@@ -78,11 +78,16 @@
 - 其他 skill 同理（各有自己的 SKILL.md + 引導表單）：拉片復刻 / 角色設計 / 場景設計 / 無人機空拍。底部「技能 skill ▾」可切換/疊加。
 - **自動化：** 套 skill = 首頁點模板（或底部技能 skill ▾ 選）→ 進帶 skillId 的 space → Slate 注入 prompt → agent 跳表單 → JS 填表單欄位 + 點「下一步」×N → 「確認提交」。表單欄位是一般 input/contenteditable，下一步/確認提交是一般 button（用 textContent 比對找）。
 
+### ✅ i2v 觸發改版後仍有效（2026-06-10 實機驗證）
+- 右鍵 canvas 圖 → context menu **「生成影片」仍在**（+ 新增「存為角色/存為場景/存為風格」餵一致性/資產系統）。§12.10.10 SOP 不變。
+- 點生成影片 → canvas-side i2v 框：**圖自動附**（多參 slot）+ **Seedance 2.0 pro 自動選** + 預設 16:9·10s·720p·**140cr**。
+- 🆕 i2v 框 tabs：**文生 / 多參（多參考圖，可加圖片+影片）/ 首尾幀（first-last frame 控制）** —— 比舊版增強。
+- 注入運鏡 prompt 進**右側 canvas-side 框**（contenteditable left>600，不是左 agent panel）→ beforeinput 注入 → send（i2v 框右側粉箭頭 left>980）。i2v prompt 照規則 prefix「根據圖片中的物體、畫面、風格來生成影片」+ 只寫運鏡。
+
 ### 待深測（下次）
 - 拉片復刻完整流程（上傳參考片 → 逐鏡生成）
-- 商品展示廣告模板 vs 手動 prompt 哪個對產品廣告更好
 - Skill 庫怎麼存/複用自訂 workflow
-- Gemini Omni 在 OiiOii 站內的 credit 成本與對話式編輯是否支援
+- Kling 3.0 / Vidu Q3 / Hailuo 2.3 手動實測對比
 
 ---
 
