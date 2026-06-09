@@ -1,9 +1,49 @@
 # Site Profile: OiiOii.ai
 
 **URL:** https://www.oiioii.ai/
-**驗證狀態:** ✅ 2026-04-18/19 demo 實測
+**驗證狀態:** ✅ 2026-04-18/19 demo + 多次實測；🆕 **2026-06-08 大改版實測**（見 §0）
 **平台類型:** Multi-agent 動畫/影片創作平台
-**Stack:** React + tldraw canvas (ref 極不穩定，座標優先)
+**Stack:** React + tldraw canvas + **Slate prompt 框**（ref 極不穩定，座標優先；注入用 beforeinput）
+
+---
+
+## 0. 🆕🆕 2026-06-08 大改版完整重測（三大新功能）
+
+**改版公告：「OiiOii 新升級，三大重磅功能全新上線」= 智能畫布 / 拉片復刻 / Skill 庫。** 整個首頁與創作介面重設計。以下實機重測。
+
+### 新首頁佈局
+- **左欄圖示導航（取代舊頂部 chip）**：發現(home) / **新建** / 專案 / 資產 / **技能(Skill庫)**
+- **頂右**：活動 / 通知 / **credits（實測 20,612）PRO** / avatar
+- 「晚安，導演！」+ 最近專案橫列 + **亮點功能模板庫** + 活動 banner
+- **亮點功能模板**（點「開始」直接進對應 workflow）：故事劇情 / **拉片復刻(New)** / 場景設計 / 角色設計 / **商品展示廣告** / 我在世界盃現場 / 世界盃大亂鬥 / 無人機空拍 / 卡牌·放置遊戲買量 / 萌寵·懸疑·搞笑故事 / 貼紙設計
+
+### 🔑 新創作流程（取代舊「新建專案 → 自由畫布 chip」）
+```
+1. 左欄點「新建」→ 直接進 /space/{uuid} canvas（即「智能畫布」，不再需要切自由畫布 chip）
+2. 底部 prompt 列工具改版：+ / 劇本 / 「技能 skill ▾」/「Agent ▾」/ 風格 / 資產 / 語言 / send(粉箭頭)
+3. 選模型 = 點底部「Agent ▾」按鈕（取代舊「智能模型」按鈕）→ 彈出「模型」面板：
+   - 右上「Agent」toggle（= 舊「智能模型」toggle，ON=AI 自動挑模型；要指定模型先關掉）
+   - 圖片 / 影片 tabs
+4. inject prompt 到 Slate 框（beforeinput insertFromPaste **照舊可用**，class `_slate-area-editable_`）
+5. 點 send 粉箭頭
+```
+
+### 🆕 模型清單變動（2026-06-08 實測）
+**圖片：** **Oii Image 2 [Best]**（超強文字控制+寫實，新旗艦，取代 GPT-Image2）/ Oii Nano Pro / Oii Nano 2 / **Oii 4o**（GPT-4o 改名）/ Midjourney niji7 / Seedream 5.0
+**影片：** Seedance 2.0 pro/fast / Seedance 1.5 Pro / **🆕 Gemini Omni**（Google 模型上架了！）/ **🆕 Oii X Imagine**（新）/ Sora2（仍列，API 代理）/ Vidu Q3 Mix/Ref/Pro·Q2 / Kling 3.0 Pro/std·V3 Omni·O1·2.6 / Hailuo 2.3 Pro/Std / Wan 2.7 / HappyHorse / **Oii Agent**（智能路由）
+
+### 自動化延續性（重要）
+- ✅ **prompt 框仍是 Slate** → `feedback_contenteditable_react_dispatch.md` 的 beforeinput insertFromPaste 注入法**續用**
+- ⚠️ **入口變了**：舊「新建專案→自由畫布」JS 點擊鏈失效 → 改「左欄新建 → 直接 canvas」
+- ⚠️ **模型選擇器位置變了**：舊「智能模型」按鈕 → 新「Agent ▾」按鈕
+- 🆕 新增 **拉片復刻**（上傳參考影片逐鏡復刻）、**Skill 庫**（左欄技能，可複用 workflow）、**商品展示廣告模板**（產品廣告專用，符合「產品清楚 hero」原則，待深測）
+- 下方舊 §1-§12 SOP 多數仍適用（canvas/Slate/盒飯機制未變），但**入口與模型選擇器步驟以本 §0 為準**
+
+### 待深測（下次）
+- 拉片復刻完整流程（上傳參考片 → 逐鏡生成）
+- 商品展示廣告模板 vs 手動 prompt 哪個對產品廣告更好
+- Skill 庫怎麼存/複用自訂 workflow
+- Gemini Omni 在 OiiOii 站內的 credit 成本與對話式編輯是否支援
 
 ---
 

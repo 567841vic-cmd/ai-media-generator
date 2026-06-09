@@ -2,6 +2,26 @@
 
 All notable changes to this skill are documented here.
 
+## [1.8.0] - 2026-06-10 — OiiOii 大改版實機重測（三大新功能 + Gemini Omni 上架）
+
+User flagged OiiOii had a major UI overhaul. Re-mapped live (verify-before-documenting) and baked into oiioii.md §0.
+
+Three headline features: 智能畫布 (Smart Canvas) / 拉片復刻 (shot-by-shot film recreation) / Skill 庫 (Skill library).
+
+Redesign mapped:
+- Left icon nav replaces top chips: 發現 / 新建 / 專案 / 資產 / 技能(Skill庫)
+- New creation flow: left-nav 新建 -> straight into /space/{uuid} canvas (no more 新建專案 -> 自由畫布 chip two-step)
+- Model picker moved: now the bottom 「Agent ▾」 button (was 智能模型); contains the Agent toggle + 圖片/影片 tabs
+- Template-driven home with 亮點功能 gallery incl. 商品展示廣告 (product ad template), 拉片復刻(New), 場景/角色設計, 無人機空拍
+
+Model lineup changes (live): NEW Oii Image 2 [Best] image flagship (text control + realism, replaces GPT-Image2), **Gemini Omni now on OiiOii**, Oii X Imagine (new), Oii 4o (renamed GPT-4o); video still has Seedance 2.0, Vidu Q3, Kling 3.0/Omni/O1, Hailuo 2.3, Wan 2.7, HappyHorse, Sora2(proxied).
+
+Automation continuity: prompt box is STILL Slate (_slate-area-editable_) -> beforeinput insertFromPaste injection still works. But the entry click-chain and model-picker location changed -> SOP entry steps updated; old 新建專案->自由畫布 chain is dead. Deep-test pending: 拉片復刻 flow, 商品展示廣告 template, Skill 庫 reuse, Gemini-Omni-on-OiiOii cost.
+
+memory/reference_platform_status_2026_06.md updated.
+
+---
+
 ## [1.7.6] - 2026-06-08 — Prompt 庫四擴：寵物/美妝/珠寶/健身/遊戲/室內/企業/水下（~99）
 
 "繼續". 2 個並行 subagent 各挖 14-15 全文，proven-prompts.md 70→~99，新增 8 類：
